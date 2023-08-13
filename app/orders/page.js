@@ -5,6 +5,31 @@ import SelectProject from "./SelectProject";
 import PerfMultiselect from "./PerfMultiselect";
 import NomenTable from "./NomenTable";
 import { useEffect, useState } from "react";
+import checkForm from "@/utils/validators/checkOrderForm";
+
+const sendPost = (form, nomen, perfs) => {
+  let fullCost = 0;
+  nomen.forEach((item) => {
+    fullCost += item.price * item.count;
+  });
+  console.log(perfs.map((perf) => perf.id));
+
+  const data = {
+    ...form,
+    teamIds: perfs.map((perf) => perf.code),
+    nomenclature: nomen.reduce((prev, curr) => {
+      let newItem = [...prev];
+      for (let i = 0; i < curr.count; i++) {
+        newItem = [...newItem, curr.id];
+      }
+
+      return newItem;
+    }, []),
+    cost: fullCost,
+  };
+
+  console.log(data);
+};
 
 function Orders() {
   const [formData, setFormData] = useState({
@@ -15,7 +40,6 @@ function Orders() {
     margin: null,
     comment: null,
     projectId: null,
-    teamIds: [],
   });
   const [selectedNomen, setSelectedNomen] = useState([]);
   const [selectedPerformers, setSelectedPerformers] = useState([]);
@@ -121,6 +145,35 @@ function Orders() {
             </tbody>
           </table>
         </div>
+        <div>
+          <span>Комментарий</span>
+          <textarea
+            name="comment"
+            onChange={(e) => changeField(e.target.name, e.target.value)}
+          ></textarea>
+        </div>
+        <button
+          onClick={(e) => {
+            console.log(formData, selectedNomen, selectedPerformers);
+            const isValid = checkForm(formData);
+            if (isValid.code === -1) {
+              console.log(isValid.message);
+              return;
+            }
+            if (selectNomen.length < 1) {
+              console.log("Не выбрана номенклатура");
+              return;
+            }
+            if (selectedPerformers.length < 1) {
+              console.log("Не выбраны исполнители");
+              return;
+            }
+
+            sendPost(formData, selectedNomen, selectedPerformers);
+          }}
+        >
+          Создать заказ
+        </button>
       </div>
       <div className="flex flex-row">
         <NomenTable handler={selectNomen} />

@@ -1,13 +1,35 @@
-
-
 import fetcher from "@/utils/fetcher";
+import { useState } from "react";
 import useSWR from "swr";
 
 const NomenTable = ({ handler }) => {
-  const { data, error, isLoading } = useSWR("api/getNomenclature", fetcher);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const pageSize = 10;
+
+  const { data, error, isLoading } = useSWR(
+    `api/getNomenclature?page=${currentPage}&pageSize=${pageSize}&searchTerm=${searchTerm}`,
+    fetcher
+  );
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div>
+      <div>
+        <span>Поиск</span>
+        <input
+          type="text"
+          value={search}
+          placeholder="Артикул, название, производитель"
+          onChange={(e) => {
+            e.preventDefault();
+
+            setSearch(e.target.value);
+          }}
+        />
+        <button onClick={(e) => setSearchTerm(search)}>Искать</button>
+      </div>
       <table>
         <thead>
           <tr key={"zeronomen"}>
@@ -54,6 +76,27 @@ const NomenTable = ({ handler }) => {
           )}
         </tbody>
       </table>
+      <div>
+        <button
+          className="cursor-pointer"
+          onClick={() => {
+            console.log("click");
+            setCurrentPage((prev) => prev - 1);
+          }}
+          disabled={currentPage === 1}
+        >
+          {"<"}
+        </button>
+        <button
+          className="cursor-pointer"
+          onClick={() => {
+            console.log("click");
+            setCurrentPage((prev) => prev + 1);
+          }}
+        >
+          {">"}
+        </button>
+      </div>
     </div>
   );
 };

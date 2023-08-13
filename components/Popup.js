@@ -20,8 +20,7 @@ const sendPost = async (form, path, updater) => {
   });
   const res = await data.json();
 
-  console.log(res.ok);
-  // if (!res.ok) updater(res);
+  if (!res.ok) updater(res);
 };
 
 const PopupForm = ({ name, path, updater = () => {}, children }) => {
