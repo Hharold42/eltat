@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "foreignKeys"
+}
+
+model Nomenclature {
+  id        Int     @id
+  name      String? @db.VarChar(156)
+  mrp       Float?
+  price     Float?
+  vendor    String? @db.VarChar(156)
+  mancode   Int?
+  manname   String? @db.VarChar(156)
+  unit      String? @db.VarChar(20)
+  amount    Int?
+  classcode String? @db.VarChar(24)
+  classname String? @db.VarChar(156)
+  fullname  String? @db.VarChar(256)
+}
+
+model Order {
+  id           Int        @id @default(autoincrement())
+  name         String
+  contractorId Int
+  teamIds      Int[]
+  paydate      DateTime?  @db.Date
+  shipdate     DateTime?  @db.Date
+  margin       Int?
+  nomenclature Int[]
+  comment      String?
+  createdAt    DateTime?  @db.Date
+  cost         Int?
+  projectId_   Int?       @map("projectId ")
+  contractor   contractor @relation(fields: [contractorId], references: [id])
+}
+
+model contractor {
+  id      Int     @id @default(autoincrement())
+  name    String  @unique
+  comment String? @db.VarChar(256)
+  Order   Order[]
+}
+
+model project {
+  id      Int     @id @default(autoincrement())
+  name    String  @unique
+  comment String?
+}
+
+model performer {
+  id    Int      @id @default(autoincrement())
+  name  String
+  lname String
+  role  perfRole
+}
+
+enum perfRole {
+  FITTER
+  ENGINEER
+}
