@@ -4,6 +4,8 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 import "reactjs-popup/dist/index.css";
+import Header from "../components/server/Header";
+import { Providers } from "./providers";
 
 export const metadata = {
   title: "Eltat",
@@ -13,7 +15,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-slate-500">
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { Plus } from "feather-icons-react";
+import { AiOutlinePlus } from "react-icons/ai";
 
 const sendPost = async (form, path, updater) => {
   const elements = form.elements;
@@ -31,14 +32,17 @@ const PopupForm = ({ name, path, updater = () => {}, children }) => {
   };
 
   return (
-    <div>
-      <Button onClick={togglePopup} variant="light">
-        <Plus size={18} className="mr-2" />
-      </Button>
+    <div className="">
+      <button
+        onClick={togglePopup}
+        className="bg-indigo-800 text-white rounded-md p-2"
+      >
+        <AiOutlinePlus size={20} />
+      </button>
 
       {isPopupVisible && (
-        <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 ">
-          <div className="bg-white p-6 rounded shadow-md relative">
+        <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-40">
+          <div className="bg-white p-6 rounded shadow-xl relative">
             <button
               onClick={togglePopup}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"

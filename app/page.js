@@ -1,16 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import useSWR from "swr";
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+import { CSVLink } from "react-csv";
 
-export default function Home() {
-  const { data, error, isLoading } = useSWR(`/api/getPerformers`, fetcher);
-  console.log(data);
+export default async function Home() {
+  const csvData = [
+    ["TEST", "", ""],
+    ["", "", ""],
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  ];
 
   return (
     <main>
-      <Link href="./orders">Создать</Link>
+      <Link href="/orderCreate">Создать</Link>
+      <CSVLink data={JSON.stringify(csvData)} asyncOnClick={true}>
+        LOL
+      </CSVLink>
     </main>
   );
 }

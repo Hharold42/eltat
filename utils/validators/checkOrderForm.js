@@ -1,9 +1,16 @@
 export default function checkForm(formDataObj) {
-  console.log(Object.values(formDataObj));
-  const values = Object.values(formDataObj);
+  const res = { code: 1, message: "ok" };
 
-  if (values.includes(null)) {
-    return { code: -1, message: "Не все поля заполнены" };
-  }
-  return { code: 1, message: "ok" };
+  const keys = Object.keys(formDataObj);
+
+  keys.forEach((item) => {
+    if (item !== "comment") {
+      if (formDataObj[item] === null) {
+        res.code = -1;
+        res.message = "Не все поля заполнены";
+      }
+    }
+  });
+
+  return res;
 }

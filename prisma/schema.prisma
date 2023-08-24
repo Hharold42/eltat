@@ -8,6 +8,16 @@ datasource db {
   relationMode = "foreignKeys"
 }
 
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  password String
+  name     String?
+  lname    String?
+  role     userRole @default(USER)
+  orders   Order[]
+}
+
 model Nomenclature {
   id        Int     @id
   name      String? @db.VarChar(156)
@@ -34,9 +44,12 @@ model Order {
   nomenclature Int[]
   comment      String?
   createdAt    DateTime?  @db.Date
-  cost         Int?
   projectId_   Int?       @map("projectId ")
+  cost         Decimal?   @db.Money
+  completed    Boolean    @default(false)
   contractor   contractor @relation(fields: [contractorId], references: [id])
+  User         User?      @relation(fields: [userId], references: [id])
+  userId       Int?       @default(0)
 }
 
 model contractor {
@@ -62,4 +75,10 @@ model performer {
 enum perfRole {
   FITTER
   ENGINEER
+}
+
+enum userRole {
+  ADMIN
+  USER
+  DEV
 }
