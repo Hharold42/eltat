@@ -29,7 +29,5 @@ export default async function handler(req, res) {
         .status(500)
         .json({ errror: "An error occurred while creating a user" });
     }
-  } else {
-    res.status(405).json({ error: "Method not allowed." });
-  }
+  } 
 }

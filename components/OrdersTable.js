@@ -2,14 +2,21 @@
 
 import useSWR from "swr";
 import fetcher from "@/utils/fetcher";
-import { useState } from "react";
 import ContractorById from "./ContractorData";
 import TeamByIds from "./TeamData";
 import ProjectById from "./ProjectData";
 import Link from "next/link";
+import {
+  ArrowLeftCircle,
+  ArrowRightCircle,
+} from "feather-icons-react/build/IconComponents";
+import { ImCheckmark } from "react-icons/im";
 
-export default function OrdersTable({ searchTerm }) {
-  const [currentPage, setCurrentPage] = useState(1);
+export default function OrdersTable({
+  searchTerm,
+  currentPage,
+  setCurrentPage,
+}) {
   const pageSize = 10;
   const { data, error, isLoading } = useSWR(
     `api/getOrders?page=${currentPage}&pageSize=${pageSize}&searchTerm=${searchTerm.term}&searchProj=${searchTerm.project}&searchContr=${searchTerm.contractor}`,
@@ -83,13 +90,7 @@ export default function OrdersTable({ searchTerm }) {
                   ? parseFloat(item.cost) * (1 + parseFloat(item.margin) / 100)
                   : 0}
               </td>
-              <td className="p-2">
-                <input
-                  type="checkbox"
-                  checked={item.completed}
-                  onChange={() => {}}
-                />
-              </td>
+              <td className="p-2">{item.completed ? <ImCheckmark /> : <></>}</td>
             </tr>
           ))}
         </tbody>
@@ -100,26 +101,26 @@ export default function OrdersTable({ searchTerm }) {
             currentPage === totalPages
               ? "bg-gray-400"
               : "bg-indigo-500 hover:bg-indigo-600"
-          } rounded-md  focus:outline-none focus:ring focus:ring-indigo-200`}
+          } rounded-md  focus:outline-none focus:ring focus:ring-indigo-200 my-2`}
           onClick={() => {
             setCurrentPage((prev) => prev - 1);
           }}
           disabled={currentPage === 1}
         >
-          {"<"}
+          <ArrowLeftCircle />
         </button>
         <button
           className={`px-4 py-2 text-white ${
             currentPage === totalPages
               ? "bg-gray-400"
               : "bg-indigo-500 hover:bg-indigo-600"
-          } rounded-md  focus:outline-none focus:ring focus:ring-indigo-200`}
+          } rounded-md  focus:outline-none focus:ring focus:ring-indigo-200 my-2`}
           onClick={() => {
             setCurrentPage((prev) => prev + 1);
           }}
           disabled={currentPage === totalPages}
         >
-          {">"}
+          <ArrowRightCircle />
         </button>
       </div>
     </div>

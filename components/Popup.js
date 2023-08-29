@@ -42,7 +42,7 @@ const PopupForm = ({ name, path, updater = () => {}, children }) => {
 
       {isPopupVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-40">
-          <div className="bg-white p-6 rounded shadow-xl relative">
+          <div className="bg-white p-6 rounded shadow-xl relative border border-slate-600">
             <button
               onClick={togglePopup}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
@@ -54,13 +54,14 @@ const PopupForm = ({ name, path, updater = () => {}, children }) => {
               {children}
               <button
                 name="submit"
+                className="block w-full px-4 py-2 text-white  bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
                 onClick={(e) => {
                   e.preventDefault();
                   sendPost(e.target.parentElement, path, updater);
                   togglePopup();
                 }}
               >
-                Click
+                Отправить
               </button>
             </form>
           </div>

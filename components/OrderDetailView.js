@@ -9,7 +9,16 @@ import { Alert, Snackbar } from "@mui/material";
 import { useState } from "react";
 import checkForm from "@/utils/validators/checkOrderForm";
 import DetailNomenTable from "./DetailNomenTable";
-import { CSVDownload, CSVLink } from "react-csv";
+import ExcelExportButton from "./XLSXButton";
+import axios from "axios";
+
+const fulfillOreder = async (id) => {
+  const body = {
+    id: id,
+  };
+
+  await axios.put("/api/order", body);
+};
 
 const updateOrder = async (form, nomen, perfs, id) => {
   let cost = 0;
@@ -44,6 +53,7 @@ const updateOrder = async (form, nomen, perfs, id) => {
 };
 
 const OrderDetailView = ({ data }) => {
+  console.log(data);
   const [formData, setFormData] = useState({
     name: data.name,
     contractorId: data.contractorId,
@@ -214,18 +224,43 @@ const OrderDetailView = ({ data }) => {
                   data.id
                 );
               }}
-              className=" block w-full px-4 py-2 text-white  bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-indigo-200"
+              className=" block w-full px-4 py-2 text-white  bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
             >
               Обновить
             </button>
-            <CSVLink
-              data={[{ name: "test", lastName: "lol", email: "lolers" }]}
+            <ExcelExportButton
+              orderNomen={selectedNomen}
+              name={data.name}
+              id={data.id}
+            />
+            <button
+              disabled={data.completed ? true : false}
+              onClick={() => {
+                const isValid = checkForm(formData);
+                if (isValid.code === -1) {
+                  setPopup({ text: isValid.message, type: "error" });
+                  handleClick();
+                  return;
+                }
+                if (selectedNomen.length < 1) {
+                  setPopup({ text: "Не выбрана номенклатура", type: "error" });
+                  handleClick();
+                  return;
+                }
+                if (selectedPerformers.length < 1) {
+                  setPopup({ text: "Не выбраны исполнители", type: "error" });
+                  handleClick();
+                  return;
+                }
+
+                setPopup({ text: "Успешно", type: "success" });
+                handleClick();
+                fulfillOreder(data.id);
+              }}
+              className="block text-center w-full px-4 py-2 text-white bg-yellow-500 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-indigo-200 disabled:bg-slate-900 disabled:cursor-not-allowed"
             >
-              CSVDownload
-            </CSVLink>
-            <div className=" block text-center w-full px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-indigo-200">
-              Удалить
-            </div>
+              Завершить
+            </button>
           </div>
           <Snackbar
             open={showPopup}
@@ -242,7 +277,7 @@ const OrderDetailView = ({ data }) => {
           </Snackbar>
         </div>
         <div>
-          <NomenTable handler={selectNomen} />
+          <NomenTable handler={selectNomen} name={data.id} id={data.id} />
         </div>
       </div>
     </div>

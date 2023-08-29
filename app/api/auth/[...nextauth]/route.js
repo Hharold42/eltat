@@ -9,14 +9,14 @@ export const authOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: "Sign in",
+      name: "Войти",
       credentials: {
         email: {
           label: "Email",
           type: "email",
           placeholder: "hello@example.com",
         },
-        password: { label: "Password", type: "password" },
+        password: { label: "Пароль", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {

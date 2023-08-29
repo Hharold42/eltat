@@ -1,6 +1,6 @@
 "use client";
 
-import useSWR, { preload } from "swr";
+import useSWR from "swr";
 import fetcher from "@/utils/fetcher";
 import OrderDetailView from "@/components/OrderDetailView";
 
