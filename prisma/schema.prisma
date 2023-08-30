@@ -47,9 +47,9 @@ model Order {
   projectId_   Int?       @map("projectId ")
   cost         Decimal?   @db.Money
   completed    Boolean    @default(false)
+  userId       Int?       @default(0)
   contractor   contractor @relation(fields: [contractorId], references: [id])
   User         User?      @relation(fields: [userId], references: [id])
-  userId       Int?       @default(0)
 }
 
 model contractor {

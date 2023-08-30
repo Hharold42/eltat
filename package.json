@@ -6,7 +6,7 @@
   },
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8090",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -34,7 +34,7 @@
     "react": "18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-csv": "^2.2.2",
-    "react-data-export": "^0.6.0",
+    "react-data-export": "^0.4.2",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "react-loader-spinner": "^5.3.4",
@@ -49,5 +49,9 @@
   },
   "browser": {
     "child_process": false
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "middleware.js",
+  "author": "",
+  "license": "ISC"
 }
