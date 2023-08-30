@@ -39,7 +39,7 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
       </div>
     );
   } else {
-    if (options.length < 1) {
+    if (options?.length < 1) {
       setOptions(data);
     }
   }
