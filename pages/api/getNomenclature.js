@@ -32,11 +32,12 @@ export default async function handler(req, res) {
       return res.status(200).json(data);
     }
 
-    const characters = searchTerm.split("");
+    const characters = searchTerm.split(" ");
 
     const data = await prisma.nomenclature.findMany({
       skip,
       take: parsedPageSize,
+      orderBy: { name: "asc" },
       where: {
         OR: [
           {
@@ -60,13 +61,6 @@ export default async function handler(req, res) {
             AND: [
               ...characters.map((char) => ({
                 classname: { contains: char, mode: "default" },
-              })),
-            ],
-          },
-          {
-            AND: [
-              ...characters.map((char) => ({
-                fullname: { contains: char, mode: "default" },
               })),
             ],
           },

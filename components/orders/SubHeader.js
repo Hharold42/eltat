@@ -94,11 +94,11 @@ const SubHeader = ({ checkedOrders = [] }) => {
   const [addMargin, setAddMargin] = useState(0);
 
   return (
-    <div className="py-4 px-6 flex items center  justify-between rounded-b-sm sticky top-0 bg-gray-700 p-4 text-white z-20">
+    <div className="bg-gray-600 h-12 px-6 flex items-center justify-between sticky top-0 z-20">
       <div className="flex space-x-4">
-        <span className=" text-xl font-semibold py-1 px-4">Заказы</span>
+        <span className="text-white text-lg font-semibold px-3">Заказы</span>
         <button
-          className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-sm flex-1"
+          className="bg-green-500 hover:bg-green-600 px-3 py-1 flex-1 rounded-sm"
           disabled={checkedOrders.length < 1}
           onClick={() => {
             checkedOrders.forEach(async (id) => {
@@ -126,7 +126,7 @@ const SubHeader = ({ checkedOrders = [] }) => {
           Счет
         </button>
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-sm flex-1"
+          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 flex-1 rounded-sm"
           disabled={checkedOrders.length < 1}
           onClick={() => {
             checkedOrders.forEach(async (id) => {
@@ -138,7 +138,7 @@ const SubHeader = ({ checkedOrders = [] }) => {
           Спецификация
         </button>
         <button
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-sm flex-1"
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm"
           disabled={checkedOrders.length < 1}
           onClick={() => {
             setModalOpen(true);
@@ -147,20 +147,22 @@ const SubHeader = ({ checkedOrders = [] }) => {
           Наценка
         </button>
       </div>
-      <div className="flex space-x-4 [&>*]:text-white">
+      <div className="flex space-x-4 text-slate-400">
         <button
+          className="text-slate-400 px-3 py-1 hover:text-slate-200"
           onClick={() => {
             checkedOrders.forEach(async (id) => {
               const data = await getOrderFullData(id);
               await axios.get(`/api/cloneOrder?id=${data.data.id}`);
             });
-           
+
             window.location.reload();
           }}
         >
           Скопировать
         </button>
         <button
+          className="text-slate-400 px-3 py-1 hover:text-slate-200"
           onClick={() => {
             checkedOrders.forEach(async (id) => {
               const data = await getOrderFullData(id);
@@ -174,7 +176,7 @@ const SubHeader = ({ checkedOrders = [] }) => {
       </div>
       {isModalOpen ? (
         <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-40 text-black">
-          <div className="bg-white p-6 rounded shadow-xl relative border border-slate-600">
+          <div className="bg-white p-6 rounded-sm shadow-xl relative border border-slate-600">
             <button
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
               onClick={() => {

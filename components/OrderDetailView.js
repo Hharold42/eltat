@@ -105,11 +105,11 @@ const OrderDetailView = ({ data }) => {
   };
 
   return (
-    <div className="p-4 z-0 bg-slate-500">
+    <div className="p-4 z-0 bg-[#F8F8F1] h-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        <div className="[&>*]:mb-4">
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-lg font-semibold text-gray-800">
+        <div className="[&>*]:mb-2 text-sm mr-2">
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Название
             </span>
             <input
@@ -117,7 +117,7 @@ const OrderDetailView = ({ data }) => {
               name="name"
               value={formData.name}
               onChange={(e) => changeField(e)}
-              className="mt-2 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="w-[700px] border border-black border-solid rounded-sm px-2 py-1"
             />
           </div>
           <SelectContactor handler={changeField} def={formData.contractorId} />
@@ -126,8 +126,8 @@ const OrderDetailView = ({ data }) => {
             state={selectedPerformers}
             handler={setSelectedPerformers}
           />
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Дата оплаты
             </span>
             <input
@@ -135,11 +135,11 @@ const OrderDetailView = ({ data }) => {
               name="paydate"
               value={formData.paydate}
               onChange={(e) => changeField(e)}
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
             />
           </div>
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Дата отправки
             </span>
             <input
@@ -147,11 +147,11 @@ const OrderDetailView = ({ data }) => {
               name="shipdate"
               value={formData.shipdate}
               onChange={(e) => changeField(e)}
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
             />
           </div>
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Наценка
             </span>
             <input
@@ -159,40 +159,42 @@ const OrderDetailView = ({ data }) => {
               name="margin"
               value={formData.margin}
               onChange={(e) => changeField(e)}
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
             />
           </div>
-          <div className="max-w-[100%] overflow-auto max-h-[60vh] p-2 bg-white rounded-md">
-            <table className="w-full max-w-full border-collapse">
+          <div className="font-bold text-sm px-1 overflow-y-scroll max-h-[50vh] border">
+            <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
               <thead className="sticky top-0 bg-white">
-                <tr key="zeroselected" className="">
-                  <th className="px-1 py-2">Артикул</th>
-                  <th className="px-1 py-2">Наименование</th>
-                  <th className="px-1 py-2">Производитель</th>
-                  <th className="px-1 py-2">Ед.</th>
-                  <th className="px-1 py-2">Цена</th>
-                  <th className="px-1 py-2">Кол-во в упаковке</th>
-                  <th className="px-1 py-2">количество</th>
+                <tr
+                  key="zeroselected"
+                  className="bg-[#000480] text-white text-left sticky top-0"
+                >
+                  <th>Артикул</th>
+                  <th>Наименование</th>
+                  <th>Производитель</th>
+                  <th>Ед.</th>
+                  <th>Цена</th>
+                  <th>Кол-во в упаковке</th>
+                  <th>количество</th>
                 </tr>
               </thead>
-              <tbody>
-                <DetailNomenTable
-                  ids={data.nomenclature}
-                  state={selectedNomen}
-                  handler={setSelectedNomen}
-                />
-              </tbody>
+
+              <DetailNomenTable
+                ids={data.nomenclature}
+                state={selectedNomen}
+                handler={setSelectedNomen}
+              />
             </table>
           </div>
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Комментарий
             </span>
             <textarea
               name="comment"
               value={formData.comment}
               onChange={(e) => changeField(e)}
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="w-[700px] border border-black border-solid rounded-sm px-2 py-1"
             ></textarea>
           </div>
           <div className="w-full flex flex-row">

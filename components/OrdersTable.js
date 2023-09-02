@@ -34,10 +34,13 @@ export default function OrdersTable({
   const totalPages = Math.ceil(data.totalItems / pageSize);
 
   return (
-    <div className="font-bold text-lg px-1">
+    <div className="font-bold px-1 text-sm">
       <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
         <thead>
-          <tr key={"zerotbl"} className="bg-[#000480] text-white text-left">
+          <tr
+            key={"zerotbl"}
+            className="bg-[#000480] text-white text-left [&>*]:px-2 [&>*]:py-1"
+          >
             <th>
               <input
                 type="checkbox"
@@ -50,14 +53,14 @@ export default function OrdersTable({
                 }}
               ></input>
             </th>
-            <th className="p-2">№</th>
-            <th className="p-2">Контрагент</th>
-            <th className="p-2">Проект</th>
-            <th className="p-2">Имя</th>
-            <th className="p-2">Дата создания</th>
-            <th className="p-2">Себестоимость</th>
-            <th className="p-2">Цена</th>
-            <th className="p-2">Статус</th>
+            <th>№</th>
+            <th>Контрагент</th>
+            <th>Проект</th>
+            <th>Название</th>
+            <th>Создано</th>
+            <th>Себестоимость</th>
+            <th>Наценка</th>
+            <th>Цена</th>
           </tr>
         </thead>
         <tbody>
@@ -65,11 +68,18 @@ export default function OrdersTable({
             <td colSpan={6} className="">
               Итого:
             </td>
+            <td>
+              {rows.reduce((prev, curr) => {
+                return rounded((prev += curr.cost ? parseFloat(curr.cost) : 0));
+              }, 0).toLocaleString('en-EU')}
+            </td>
             <td className="text-left px-2">
               {rows
                 .reduce((prev, curr) => {
                   return rounded(
-                    (prev += curr.cost ? parseFloat(curr.cost) : 0)
+                    (prev += curr.cost
+                      ? parseFloat(curr.cost) * (parseFloat(curr.margin) / 100)
+                      : 0)
                   );
                 }, 0)
                 .toLocaleString("en-EU")}
@@ -90,7 +100,7 @@ export default function OrdersTable({
           {rows?.map((item) => (
             <tr
               key={item.id + "order"}
-              className="hover:bg-gray-50 text-left font-medium"
+              className="hover:bg-gray-50 text-left font-medium [&>*]:px-2"
             >
               <td className="flex justify-center">
                 <input
@@ -99,10 +109,10 @@ export default function OrdersTable({
                   onChange={(e) => checker(item.id, e.target.checked)}
                 ></input>
               </td>
-              <td className="p-2">{item.id}</td>
+              <td>{item.id}</td>
               <ContractorById id={item.contractorId} cn={"p-2"} />
               <ProjectById id={item.projectId_} cn={"p-2"} />
-              <td className="p-2">
+              <td>
                 <Link
                   href={`/orders/${item.id}`}
                   className="text-indigo-400 hover:border-b hover:border-indigo-800"
@@ -110,22 +120,18 @@ export default function OrdersTable({
                   {item.name}
                 </Link>
               </td>
-              <td className="p-2">
-                {new Date(item.createdAt).toLocaleDateString("ru")}
-              </td>
-              <td className="p-2">
+              <td>{new Date(item.createdAt).toLocaleDateString("ru")}</td>
+              <td>
                 {item.cost ? Number(item.cost).toLocaleString("en-EU") : 0}
               </td>
-              <td className="p-2">
+              <td>{`${item.margin}%`}</td>
+              <td>
                 {item.cost
                   ? rounded(
                       parseFloat(item.cost) *
                         (1 + parseFloat(item.margin) / 100)
                     ).toLocaleString("en-EU")
                   : 0}
-              </td>
-              <td className="p-2">
-                {item.completed ? <ImCheckmark /> : <></>}
               </td>
             </tr>
           ))}

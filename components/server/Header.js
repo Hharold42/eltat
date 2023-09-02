@@ -8,27 +8,30 @@ const Header = async () => {
   const session = await getServerSession(authOptions);
 
   return (
-    <div className="bg-gray-800 py-4 px-6 flex items-center justify-between sticky top-0 z-10">
+    <div className="bg-gray-800 h-14 px-6 flex items-center justify-between sticky top-0 z-10">
       <div className="flex space-x-4">
-        <span className="text-white text-xl font-semibold py-1 px-4">
-          ТатЭл
-        </span>
+        <span className="text-white text-lg font-semibold px-3">ТатЭл</span>
         <Link
           href={"/orders"}
-          className="text-white border px-4 py-2 rounded-md hover:bg-slate-900"
+          className="text-slate-400 px-3 py-1 hover:text-slate-200"
         >
           Заказы
         </Link>
         <Link
           href={"/orderCreate"}
-          className="text-white border px-4 py-2 rounded-md hover:bg-slate-900"
+          className="text-slate-400 px-3 py-1 hover:text-slate-200"
         >
-          Создать заказ
+          Новый заказ
         </Link>
       </div>
-      <div className="flex space-x-4 [&>*]:text-white">
+      <div className="flex space-x-4 text-slate-400">
         {["DEV", "ADMIN"].includes(session?.user?.role) ? (
-          <Link href={"/admin"}>ADMIN PANEL</Link>
+          <Link
+            href={"/admin"}
+            className="text-slate-400 px-3 py-1 hover:text-slate-200"
+          >
+            ADMIN PANEL
+          </Link>
         ) : (
           <></>
         )}

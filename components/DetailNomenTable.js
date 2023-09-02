@@ -3,6 +3,7 @@
 import useSWR from "swr";
 import fetcher from "@/utils/fetcher";
 import { useEffect } from "react";
+import rounded from "@/utils/round";
 
 const DetailNomenTable = ({ ids, state, handler }) => {
   const { data, isLoading } = useSWR(
@@ -35,43 +36,60 @@ const DetailNomenTable = ({ ids, state, handler }) => {
       </tr>
     );
 
-  return state?.map((item, index) => {
-    return (
-      <tr
-        id={item.id}
-        key={`${item.id}nomen`}
-        className="py-2 text-center bg-gray-50 odd:bg-gray-400 even:bg-slate-50 border-b-2 border-solid border-slate-700  "
-      >
-        <td className="px-1">{item.vendor}</td>
-        <td className="px-1">{item.name}</td>
-        <td className="px-1">{item.manname}</td>
-        <td className="px-1">{item.unit}</td>
-        <td className="px-1">{item.price * item.count}</td>
-        <td className="px-1">{item.amount}</td>
-        <td className="px-1">
-          <div className="flex items-center">
-            <input
-              type="number"
-              defaultValue={item.count}
-              className="mr-2 max-w-[4rem] text-center border-2 border-black rounded"
-              onChange={(e) => {
-                handler((prev) => {
-                  const newArr = prev.map((item, i) => {
-                    if (i === index) {
-                      return { ...item, count: e.target.value };
-                    }
-                    return item;
-                  });
-
-                  return newArr;
-                });
-              }}
-            ></input>
-          </div>
+  return (
+    <tbody>
+      <tr className="text-right font-bold [&>*]:pr-4">
+        <td colSpan={4}>Итого: </td>
+        <td>
+          {state.length > 0
+            ? rounded(
+                state.reduce((prev, curr) => {
+                  console.log(curr);
+                  return prev + curr.price * curr.count;
+                }, 0)
+              )
+            : 0}
         </td>
       </tr>
-    );
-  });
+      {state?.map((item, index) => {
+        return (
+          <tr
+            id={item.id}
+            key={`${item.id}nomen`}
+            className="hover:bg-gray-50 text-left font-medium [&>*]:px-1"
+          >
+            <td>{item.vendor}</td>
+            <td>{item.name}</td>
+            <td>{item.manname}</td>
+            <td>{item.unit}</td>
+            <td>{item.price * item.count}</td>
+            <td>{item.amount}</td>
+            <td>
+              <div className="flex items-center">
+                <input
+                  type="number"
+                  defaultValue={item.count}
+                  className="mr-2 max-w-[4rem] text-center border-2 border-black rounded"
+                  onChange={(e) => {
+                    handler((prev) => {
+                      const newArr = prev.map((item, i) => {
+                        if (i === index) {
+                          return { ...item, count: e.target.value };
+                        }
+                        return item;
+                      });
+
+                      return newArr;
+                    });
+                  }}
+                ></input>
+              </div>
+            </td>
+          </tr>
+        );
+      })}
+    </tbody>
+  );
 };
 
 export default DetailNomenTable;

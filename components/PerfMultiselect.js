@@ -57,8 +57,8 @@ const PerfMultiselect = ({ state, handler }) => {
   }
 
   return (
-    <div className="w-full px-2 py-1 flex flex-row">
-      <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
+    <div className="flex items-center">
+      <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
         Команда
       </span>
 
@@ -73,7 +73,7 @@ const PerfMultiselect = ({ state, handler }) => {
         optionLabel="name"
         placeholder="Команда"
         maxSelectedLabels={10}
-        className="ml-4 w-full px-2 border border-black border-solid rounded-sm"
+        className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
       />
     </div>
   );

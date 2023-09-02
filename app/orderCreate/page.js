@@ -113,9 +113,9 @@ function OrderCreate() {
   return (
     <div className="p-4 z-0 bg-[#F8F8F1] h-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        <div className="[&>*]:mb-4">
-          <div className="w-full px-2 py-1 flex flex-row">
-            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
+        <div className="[&>*]:mb-2 text-sm mr-2">
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Название
             </span>
             <input
@@ -123,54 +123,49 @@ function OrderCreate() {
               name="name"
               placeholder="Название заказа"
               onChange={(e) => changeField(e)}
-              className="ml-4 w-full border border-black border-solid rounded-sm px-2 py-2"
+              className="w-[700px] border border-black border-solid rounded-sm px-2 py-1"
             />
           </div>
-          <div className="flex flex-row">
-            <SelectContactor
-              handler={changeField}
-              def={formData.contractorId}
-            />
-            <SelectProject handler={changeField} def={formData.projectId} />
-          </div>
+          <SelectContactor handler={changeField} def={formData.contractorId} />
+          <SelectProject handler={changeField} def={formData.projectId} />
           <PerfMultiselect
             state={selectedPerformers}
             handler={setSelectedPerformers}
           />
-          <div className="w-full px-2 py-1 flex flex-row">
-            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Дата оплаты
             </span>
             <input
               type="date"
               name="paydate"
               onChange={(e) => changeField(e)}
-              className="ml-4 w-full border border-black border-solid rounded-sm px-2 py-2"
+              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
             />
           </div>
-          <div className="w-full px-2 py-1 flex flex-row">
-            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
-              Дата отправки
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
+              Дата отгрузки
             </span>
             <input
               type="date"
               name="shipdate"
               onChange={(e) => changeField(e)}
-              className="ml-4 w-full border border-black border-solid rounded-sm px-2 py-2"
+              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
             />
           </div>
-          <div className="w-full px-2 py-1 flex flex-row">
-            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Наценка
             </span>
             <input
               type="number"
               name="margin"
               onChange={(e) => changeField(e)}
-              className="ml-4 w-full border border-black border-solid rounded-sm px-2 py-2"
+              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
             />
           </div>
-          <div className="font-bold text-sm px-1 overflow-y-scroll max-h-[30vh] border">
+          <div className="font-bold text-sm px-1 overflow-y-scroll max-h-[50vh] border">
             <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
               <thead className="sticky top-0 bg-white">
                 <tr
@@ -200,7 +195,7 @@ function OrderCreate() {
                       : 0}
                   </td>
                 </tr>
-                {selectedNomen.map((item, index) => (
+                {selectedNomen.reverse().map((item, index) => (
                   <tr
                     id={item.id}
                     key={`${item.id}nomen`}
@@ -229,15 +224,15 @@ function OrderCreate() {
               </tbody>
             </table>
           </div>
-          <div className="w-full px-2 py-1 flex flex-row">
-            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
+          <div className="flex items-center">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Комментарий
             </span>
             <textarea
               name="comment"
               placeholder="..."
               onChange={(e) => changeField(e)}
-              className="ml-4 w-full px-2 border border-black border-solid rounded-sm"
+              className="w-[700px] border border-black border-solid rounded-sm px-2 py-1"
             ></textarea>
           </div>
           <button

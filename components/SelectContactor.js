@@ -45,9 +45,30 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
   }
 
   return (
-    <div className="w-full px-2 py-1 flex flex-row">
-      <span className="py-1 text-black font-semibold pr-2">Контрагент</span>
+    <div className="flex items-center">
+      <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
+        Контрагент
+      </span>
 
+      <select
+        name="contractorId"
+        value={def}
+        onChange={(e) => {
+          handler(e);
+        }}
+        className={`w-[350px] border border-black border-solid rounded-sm px-2 py-1`}
+      >
+        {[
+          <option key={"zerocont"} value={-1}></option>,
+          ...options
+            ?.map((item) => (
+              <option key={`${item.id}`} value={item.id} className="">
+                {item.name}
+              </option>
+            ))
+            .reverse(),
+        ]}
+      </select>
       {plus === true ? (
         <PopupForm
           name="Новый контрагент"
@@ -66,26 +87,6 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
       ) : (
         <></>
       )}
-
-      <select
-        name="contractorId"
-        value={def}
-        onChange={(e) => {
-          handler(e);
-        }}
-        className={`w-full px-2 py-2 border border-black border-solid rounded-sm`}
-      >
-        {[
-          <option key={"zerocont"} value={-1}></option>,
-          ...options
-            ?.map((item) => (
-              <option key={`${item.id}`} value={item.id} className="">
-                {item.name}
-              </option>
-            ))
-            .reverse(),
-        ]}
-      </select>
     </div>
   );
 };
