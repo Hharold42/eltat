@@ -48,6 +48,9 @@ export default async function handler(req, res) {
       },
       skip,
       take: parsedPageSize,
+      orderBy: {
+        id: "desc",
+      },
     });
 
     const totalItems = await prisma.order.count({

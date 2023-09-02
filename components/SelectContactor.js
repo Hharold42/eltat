@@ -1,3 +1,5 @@
+"use client";
+
 import PopupForm from "@/components/Popup";
 import fetcher from "@/utils/fetcher";
 import { useState } from "react";
@@ -13,10 +15,8 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
 
   if (isLoading) {
     return (
-      <div className="p-4 bg-white rounded-lg shadow-md w-full flex flex-row">
-        <span className="block text-lg font-semibold text-gray-800 mb-2">
-          Контрагент
-        </span>
+      <div className="">
+        <span className="">Контрагент</span>
         <div role="status">
           <svg
             aria-hidden="true"
@@ -45,10 +45,8 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
   }
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md w-full">
-      <span className="block text-lg font-semibold text-gray-800 mb-2">
-        Контрагент
-      </span>
+    <div className="w-full px-2 py-1 flex flex-row">
+      <span className="py-1 text-black font-semibold pr-2">Контрагент</span>
 
       {plus === true ? (
         <PopupForm
@@ -56,22 +54,13 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
           path="createContractor"
           updater={updateOnPost}
         >
-          <div className="mb-4">
-            <span className="text-sm font-medium text-gray-600">Имя</span>
-            <input
-              type="text"
-              name="name"
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
-            />
+          <div className="">
+            <span className="">Имя</span>
+            <input type="text" name="name" className="" />
           </div>
-          <div className="mb-6">
-            <span className="text-sm font-medium text-gray-600">
-              Комментарий
-            </span>
-            <textarea
-              name="comment"
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
-            ></textarea>
+          <div className="">
+            <span className="">Комментарий</span>
+            <textarea name="comment" className=""></textarea>
           </div>
         </PopupForm>
       ) : (
@@ -84,17 +73,13 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
         onChange={(e) => {
           handler(e);
         }}
-        className="mt-2 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+        className="w-full px-2 py-2 border border-black border-solid rounded-sm"
       >
         {[
           <option key={"zerocont"} value={-1}></option>,
           ...options
             ?.map((item) => (
-              <option
-                key={`${item.id}`}
-                value={item.id}
-                className="text-gray-800"
-              >
+              <option key={`${item.id}`} value={item.id} className="">
                 {item.name}
               </option>
             ))

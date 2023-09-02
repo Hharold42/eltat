@@ -16,7 +16,7 @@ const AdminPanel = async () => {
         <AddNewUser />
       </div>
       <div className="col-span-1 bg-gray-100 p-4 rounded shadow-md">
-        <AddNewPerformer />
+        <AddNewPerformer /> 
       </div>
     </div>
   );

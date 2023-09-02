@@ -11,7 +11,7 @@ const NomenTable = ({ handler }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const pageSize = 10;
+  const pageSize = 100;
 
   const { data, error, isLoading } = useSWR(
     `/api/getNomenclature?page=${currentPage}&pageSize=${pageSize}&searchTerm=${searchTerm}`,
@@ -48,10 +48,29 @@ const NomenTable = ({ handler }) => {
   }
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md fixed right-4 w-[49%] h-[90vh]">
-      <div className="mb-4">
-        <span className="block text-lg font-semibold text-gray-800">Поиск</span>
-        <div className="flex items-center mt-2">
+    <div className="z-0 bg-[#F8F8F1] h-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-2 py-2">
+        <div>
+          <button
+            className="px-4 py-2 mx-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
+            onClick={() => {
+              setCurrentPage((prev) => prev - 1);
+            }}
+            disabled={currentPage === 1}
+          >
+            <ArrowLeftCircle />
+          </button>
+          <button
+            className="px-4 py-2 mx-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
+            onClick={() => {
+              setCurrentPage((prev) => prev + 1);
+            }}
+          >
+            <ArrowRightCircle />
+          </button>
+        </div>
+
+        <div className="flex flex-row">
           <input
             type="text"
             value={search}
@@ -73,65 +92,50 @@ const NomenTable = ({ handler }) => {
           </button>
         </div>
       </div>
-      <div className="">
-        <table className="w-full mb-4">
+      <div className="font-bold text-lg px-1 overflow-y-scroll max-h-[80vh] border">
+        <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
           <thead>
-            <tr key="zeronomen">
-              <th className="px-1 py-2"></th>
-              <th className="px-1 py-2">Артикул</th>
-              <th className="px-1 py-2">Наименование</th>
-              <th className="px-1 py-2">Производитель</th>
-              <th className="px-1 py-2">Ед.</th>
-              <th className="px-1 py-2">Цена</th>
-              <th className="px-1 py-2">Кол-во в упаковке</th>
+            <tr
+              key="zeronomen"
+              className="[&>*]:p-2 bg-[#000480] text-white text-left sticky top-0"
+            >
+              <th>
+                <AiOutlinePlus size={30} />
+              </th>
+              <th>Артикул</th>
+              <th>Наименование</th>
+              <th>Производитель</th>
+              <th>Ед.</th>
+              <th>Цена</th>
+              <th>Кол-во в упаковке</th>
             </tr>
           </thead>
           <tbody>
             {data?.map((item) => (
               <tr
                 key={`${item.id}nomen`}
-                className="py-2 text-center bg-gray-50 odd:bg-gray-400 even:bg-slate-50 border-b-2 border-solid border-slate-700"
+                className="hover:bg-gray-50 text-left font-medium [&>*]:p-2"
               >
-                <td className="px-1 ">
+                <td className="flex justify-center">
                   <button
                     onClick={(e) => {
                       handler(item);
                     }}
-                    className="bg-indigo-800 text-white rounded-md p-2"
+                    className="bg-indigo-800 text-white rounded-md"
                   >
                     <AiOutlinePlus size={30} />
                   </button>
                 </td>
-                <td className="px-1 ">{item.vendor}</td>
-                <td className="px-1 ">{item.name}</td>
-                <td className="px-1 ">{item.manname}</td>
-                <td className="px-1 ">{item.unit}</td>
-                <td className="px-1 ">{item.price}</td>
-                <td className="px-1 ">{item.amount}</td>
+                <td>{item.vendor}</td>
+                <td>{item.name}</td>
+                <td>{item.manname}</td>
+                <td>{item.unit}</td>
+                <td>{item.price}</td>
+                <td>{item.amount}</td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-
-      <div className="flex justify-between fixed bottom-4">
-        <button
-          className="px-4 py-2 mx-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
-          onClick={() => {
-            setCurrentPage((prev) => prev - 1);
-          }}
-          disabled={currentPage === 1}
-        >
-          <ArrowLeftCircle />
-        </button>
-        <button
-          className="px-4 py-2 mx-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
-          onClick={() => {
-            setCurrentPage((prev) => prev + 1);
-          }}
-        >
-          <ArrowRightCircle />
-        </button>
       </div>
     </div>
   );

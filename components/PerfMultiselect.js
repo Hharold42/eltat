@@ -3,10 +3,10 @@
 import fetcher from "@/utils/fetcher";
 import { MultiSelect } from "primereact/multiselect";
 import useSWR from "swr";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const PerfMultiselect = ({ state, handler }) => {
-  const { data, error, isLoading } = useSWR("/api/getPerformers", fetcher);
+  const { data, isLoading } = useSWR("/api/getPerformers", fetcher);
   const [options, setOptions] = useState([{ name: "loading", code: 0 }]);
 
   const getOptionsByCodes = (codes = []) => {
@@ -20,10 +20,8 @@ const PerfMultiselect = ({ state, handler }) => {
 
   if (isLoading) {
     return (
-      <div className="p-4 bg-white rounded-lg shadow-md w-full z-0">
-        <span className="block text-lg font-semibold text-gray-800 mb-2">
-          Команда
-        </span>
+      <div className="w-full px-2 py-1 flex flex-row">
+        <span className="py-1 text-black font-semibold pr-2">Команда</span>
         <div role="status">
           <svg
             aria-hidden="true"
@@ -59,8 +57,8 @@ const PerfMultiselect = ({ state, handler }) => {
   }
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md w-full">
-      <span className="block text-lg font-semibold text-gray-800 mb-2">
+    <div className="w-full px-2 py-1 flex flex-row">
+      <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
         Команда
       </span>
 
@@ -75,7 +73,7 @@ const PerfMultiselect = ({ state, handler }) => {
         optionLabel="name"
         placeholder="Команда"
         maxSelectedLabels={10}
-        className="mt-2 w-full static"
+        className="ml-4 w-full px-2 border border-black border-solid rounded-sm"
       />
     </div>
   );

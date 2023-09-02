@@ -35,7 +35,7 @@ const PopupForm = ({ name, path, updater = () => {}, children }) => {
     <div className="">
       <button
         onClick={togglePopup}
-        className="bg-indigo-800 text-white rounded-md p-2"
+        className="mx-2 bg-white border-2 border-indigo-800 text-indigo-900 rounded-sm p-2"
       >
         <AiOutlinePlus size={20} />
       </button>

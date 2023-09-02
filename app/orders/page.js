@@ -4,6 +4,8 @@ import { useState } from "react";
 import OrdersTable from "../../components/OrdersTable";
 import SelectContactor from "../../components/SelectContactor";
 import SelectProject from "../../components/SelectProject";
+import { FiSearch } from "react-icons/fi";
+import SubHeader from "@/components/orders/SubHeader";
 
 export default function Orders() {
   const [contractor, setContactor] = useState(-1);
@@ -15,6 +17,24 @@ export default function Orders() {
     term: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const [checked, setChecked] = useState([]);
+
+  const changeChecked = (id, checked) => {
+    if (checked === true) {
+      setChecked((prev) => [...prev, id]);
+    } else {
+      setChecked((prev) => {
+        const index = prev.indexOf(id);
+        const tmp = [...prev];
+
+        if (index > -1) {
+          tmp.splice(index, 1);
+        }
+
+        return tmp;
+      });
+    }
+  };
 
   const changeProject = (e) => {
     const { value } = e.target;
@@ -27,48 +47,53 @@ export default function Orders() {
   };
 
   return (
-    <main className="flex flex-col">
-      <div className="flex flex-row w-full justify-between [&>*]:mx-2 [&>*]:my-2">
-        <SelectContactor
-          handler={changeContactor}
-          plus={false}
-          def={contractor}
-        />
-        <SelectProject handler={changeProject} plus={false} def={project} />
-        <div className="w-full p-4 bg-white rounded-lg shadow-md">
-          <span className="block text-lg font-semibold text-gray-800 mb-2">
-            Название
-          </span>
-          <input
-            type="text"
-            value={term}
-            onChange={(e) => setTerm(e.target.value)}
-            className="mt-2 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 justify-center items-center align-middle"
+    <div>
+      <SubHeader checkedOrders={checked} />
+      <main className="flex flex-col my-2">
+        <div className="flex flex-row w-full justify-between mb-2 px-2">
+          <SelectContactor
+            handler={changeContactor}
+            plus={false}
+            def={contractor}
+          />
+          <SelectProject handler={changeProject} plus={false} def={project} />
+          <div className="w-full px-2 py-1 flex flex-col">
+            <span className="py-1 text-black font-semibold">Название</span>
+            <input
+              type="text"
+              value={term}
+              onChange={(e) => setTerm(e.target.value)}
+              className="border border-black border-solid rounded-sm"
+            />
+          </div>
+          <div className="flex flex-col justify-center px-2">
+            <button
+              className=""
+              onClick={() => {
+                setCurrentPage(1);
+                setSearch({
+                  contractor: contractor,
+                  project: project,
+                  term: term,
+                });
+              }}
+            >
+              <FiSearch size={40} />
+            </button>
+          </div>
+        </div>
+        <div className="bg-white p-2 border border-slate-500 m-1">
+          <OrdersTable
+            searchTerm={search}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            checker={changeChecked}
+            checked={checked}
+            setter={setChecked}
           />
         </div>
-        <div className="bg-transparent items-center w-[10%] text-center align-middle">
-          <button
-            className="block w-full px-4 py-2 text-white  bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200 mt-5 border-2 border-white"
-            onClick={() => {
-              setCurrentPage(1);
-              setSearch({
-                contractor: contractor,
-                project: project,
-                term: term,
-              });
-            }}
-          >
-            Поиск
-          </button>
-        </div>
-      </div>
-      <div className="max-w-full shadow-md min-h-[10vh] bg-white rounded-md mx-2">
-        <OrdersTable
-          searchTerm={search}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
-      </div>
-    </main>
+      </main>
+      
+    </div>
   );
 }

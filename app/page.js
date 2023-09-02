@@ -1,9 +1,6 @@
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
 export default function Home() {
-redirect('/orders')
-  return (
-    <main>
-    </main>
-  );
+  redirect("/orders");
+  return <main></main>;
 }

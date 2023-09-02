@@ -8,7 +8,7 @@ const Header = async () => {
   const session = await getServerSession(authOptions);
 
   return (
-    <div className="bg-gray-800 py-4 px-6 flex items-center justify-between sticky top-0">
+    <div className="bg-gray-800 py-4 px-6 flex items-center justify-between sticky top-0 z-10">
       <div className="flex space-x-4">
         <span className="text-white text-xl font-semibold py-1 px-4">
           ТатЭл

@@ -23,16 +23,53 @@ export default async function handler(req, res) {
 
     const skip = (parsedPage - 1) * parsedPageSize;
 
+    if (searchTerm.length < 1) {
+      const data = await prisma.nomenclature.findMany({
+        skip,
+        take: parsedPageSize,
+      });
+
+      return res.status(200).json(data);
+    }
+
+    const characters = searchTerm.split("");
+
     const data = await prisma.nomenclature.findMany({
       skip,
       take: parsedPageSize,
       where: {
         OR: [
-          { name: { contains: searchTerm, mode: "insensitive" } },
-          { vendor: { contains: searchTerm, mode: "insensitive" } },
-          { manname: { contains: searchTerm, mode: "insensitive" } },
-          { classname: { contains: searchTerm, mode: "insensitive" } },
-          { fullname: { contains: searchTerm, mode: "insensitive" } },
+          {
+            AND: [
+              ...characters.map((char) => ({
+                name: { contains: char, mode: "default" },
+              })),
+            ],
+          },
+          {
+            vendor: { contains: searchTerm, mode: "insensitive" },
+          },
+          {
+            AND: [
+              ...characters.map((char) => ({
+                manname: { contains: char, mode: "default" },
+              })),
+            ],
+          },
+          {
+            AND: [
+              ...characters.map((char) => ({
+                classname: { contains: char, mode: "default" },
+              })),
+            ],
+          },
+          {
+            AND: [
+              ...characters.map((char) => ({
+                fullname: { contains: char, mode: "default" },
+              })),
+            ],
+          },
         ],
       },
     });

@@ -8,7 +8,9 @@ import { useState } from "react";
 import checkForm from "@/utils/validators/checkOrderForm";
 import { Alert, Snackbar } from "@mui/material";
 
-const sendPost = async (form, nomen, perfs) => {
+import { useSession } from "next-auth/react";
+
+const sendPost = async (form, nomen, perfs, uid) => {
   let cost = 0;
 
   nomen.map((item) => {
@@ -27,6 +29,7 @@ const sendPost = async (form, nomen, perfs) => {
       return newItem;
     }, []),
     cost: cost,
+    uid: uid,
   };
 
   const data = await fetch(`/api/createOrder`, {
@@ -37,6 +40,8 @@ const sendPost = async (form, nomen, perfs) => {
 };
 
 function OrderCreate() {
+  const { data: session, status } = useSession();
+
   const [formData, setFormData] = useState({
     name: null,
     contractorId: -1,
@@ -105,11 +110,11 @@ function OrderCreate() {
   };
 
   return (
-    <div className="p-4 z-0 bg-slate-500">
+    <div className="p-4 z-0 bg-[#F8F8F1] h-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
         <div className="[&>*]:mb-4">
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-lg font-semibold text-gray-800">
+          <div className="w-full px-2 py-1 flex flex-row">
+            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
               Название
             </span>
             <input
@@ -117,46 +122,51 @@ function OrderCreate() {
               name="name"
               placeholder="Название заказа"
               onChange={(e) => changeField(e)}
-              className="mt-2 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="ml-4 w-full border border-black border-solid rounded-sm px-2 py-2"
             />
           </div>
-          <SelectContactor handler={changeField} def={formData.contractorId} />
-          <SelectProject handler={changeField} def={formData.projectId} />
+          <div className="flex flex-row">
+            <SelectContactor
+              handler={changeField}
+              def={formData.contractorId}
+            />
+            <SelectProject handler={changeField} def={formData.projectId} />
+          </div>
           <PerfMultiselect
             state={selectedPerformers}
             handler={setSelectedPerformers}
           />
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="w-full px-2 py-1 flex flex-row">
+            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
               Дата оплаты
             </span>
             <input
               type="date"
               name="paydate"
               onChange={(e) => changeField(e)}
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="ml-4 w-full border border-black border-solid rounded-sm px-2 py-2"
             />
           </div>
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="w-full px-2 py-1 flex flex-row">
+            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
               Дата отправки
             </span>
             <input
               type="date"
               name="shipdate"
               onChange={(e) => changeField(e)}
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="ml-4 w-full border border-black border-solid rounded-sm px-2 py-2"
             />
           </div>
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="w-full px-2 py-1 flex flex-row">
+            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
               Наценка
             </span>
             <input
               type="number"
               name="margin"
               onChange={(e) => changeField(e)}
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="ml-4 w-full border border-black border-solid rounded-sm px-2 py-2"
             />
           </div>
           <div className="max-w-[100%] overflow-auto max-h-[60vh] p-2 bg-white rounded-md">
@@ -202,15 +212,15 @@ function OrderCreate() {
               </tbody>
             </table>
           </div>
-          <div className="mb-2 p-4 bg-white rounded-lg shadow-md w-full">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="w-full px-2 py-1 flex flex-row">
+            <span className="py-1 text-black font-semibold pr-2 max-w-[10%] w-[10%]">
               Комментарий
             </span>
             <textarea
               name="comment"
               placeholder="..."
               onChange={(e) => changeField(e)}
-              className="mt-1 p-2 border rounded-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300"
+              className="ml-4 w-full px-2 border border-black border-solid rounded-sm"
             ></textarea>
           </div>
           <button
@@ -234,7 +244,12 @@ function OrderCreate() {
 
               setPopup({ text: "Успешно", type: "success" });
               handleClick();
-              sendPost(formData, selectedNomen, selectedPerformers);
+              sendPost(
+                formData,
+                selectedNomen,
+                selectedPerformers,
+                session?.user?.id
+              );
             }}
             className="block w-full px-4 py-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
           >

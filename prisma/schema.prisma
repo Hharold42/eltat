@@ -34,22 +34,22 @@ model Nomenclature {
 }
 
 model Order {
-  id           Int        @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   name         String
   contractorId Int
   teamIds      Int[]
-  paydate      DateTime?  @db.Date
-  shipdate     DateTime?  @db.Date
+  paydate      DateTime?   @db.Date
+  shipdate     DateTime?   @db.Date
   margin       Int?
   nomenclature Int[]
   comment      String?
-  createdAt    DateTime?  @db.Date
-  projectId_   Int?       @map("projectId ")
-  cost         Decimal?   @db.Money
-  completed    Boolean    @default(false)
-  userId       Int?       @default(0)
-  contractor   contractor @relation(fields: [contractorId], references: [id])
-  User         User?      @relation(fields: [userId], references: [id])
+  createdAt    DateTime?   @db.Date
+  projectId_   Int?        @map("projectId ")
+  cost         Decimal?    @db.Money
+  completed    Boolean     @default(false)
+  userId       Int?        @default(0)
+  contractor   contractor? @relation(fields: [contractorId], references: [id])
+  User         User?       @relation(fields: [userId], references: [id])
 }
 
 model contractor {

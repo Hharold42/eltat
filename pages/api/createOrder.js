@@ -19,6 +19,7 @@ export default async function handler(req, res) {
             createdAt: new Date(),
             projectId_: parseInt(order.projectId),
             cost: parseFloat(order.cost),
+            userId: parseInt(order.uid),
           },
         });
         res.status(200).json(data);
