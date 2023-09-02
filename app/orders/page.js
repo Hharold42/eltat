@@ -57,13 +57,13 @@ export default function Orders() {
             def={contractor}
           />
           <SelectProject handler={changeProject} plus={false} def={project} />
-          <div className="w-full px-2 py-1 flex flex-col">
-            <span className="py-1 text-black font-semibold">Название</span>
+          <div className="w-full px-2 py-1 flex flex-row">
+            <span className="py-1 pr-2 text-black font-semibold">Название</span>
             <input
               type="text"
               value={term}
               onChange={(e) => setTerm(e.target.value)}
-              className="border border-black border-solid rounded-sm"
+              className="w-full px-2 py-2 border border-black border-solid rounded-sm"
             />
           </div>
           <div className="flex flex-col justify-center px-2">
@@ -93,7 +93,6 @@ export default function Orders() {
           />
         </div>
       </main>
-      
     </div>
   );
 }

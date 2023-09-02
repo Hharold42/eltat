@@ -9,6 +9,7 @@ import checkForm from "@/utils/validators/checkOrderForm";
 import { Alert, Snackbar } from "@mui/material";
 
 import { useSession } from "next-auth/react";
+import rounded from "@/utils/round";
 
 const sendPost = async (form, nomen, perfs, uid) => {
   let cost = 0;
@@ -169,33 +170,49 @@ function OrderCreate() {
               className="ml-4 w-full border border-black border-solid rounded-sm px-2 py-2"
             />
           </div>
-          <div className="max-w-[100%] overflow-auto max-h-[60vh] p-2 bg-white rounded-md">
-            <table className="w-full max-w-full border-collapse">
+          <div className="font-bold text-sm px-1 overflow-y-scroll max-h-[30vh] border">
+            <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
               <thead className="sticky top-0 bg-white">
-                <tr key="zeroselected" className="">
-                  <th className="px-1 py-2">Артикул</th>
-                  <th className="px-1 py-2">Наименование</th>
-                  <th className="px-1 py-2">Производитель</th>
-                  <th className="px-1 py-2">Ед.</th>
-                  <th className="px-1 py-2">Цена</th>
-                  <th className="px-1 py-2">Кол-во в упаковке</th>
-                  <th className="px-1 py-2">количество</th>
+                <tr
+                  key="zeroselected"
+                  className=" bg-[#000480] text-white text-left sticky top-0"
+                >
+                  <th>Артикул</th>
+                  <th>Наименование</th>
+                  <th>Производитель</th>
+                  <th>Ед.</th>
+                  <th>Цена</th>
+                  <th>Кол-во в упаковке</th>
+                  <th>количество</th>
                 </tr>
               </thead>
               <tbody>
+                <tr className="text-right font-bold [&>*]:pr-4">
+                  <td colSpan={4}>Итого: </td>
+                  <td>
+                    {selectedNomen.length > 0
+                      ? rounded(
+                          selectedNomen.reduce((prev, curr) => {
+                            console.log(curr);
+                            return prev + curr.price * curr.count;
+                          }, 0)
+                        )
+                      : 0}
+                  </td>
+                </tr>
                 {selectedNomen.map((item, index) => (
                   <tr
                     id={item.id}
                     key={`${item.id}nomen`}
-                    className="py-2 text-center bg-gray-50 odd:bg-gray-400 even:bg-slate-50 border-b-2 border-solid border-slate-700 "
+                    className="hover:bg-gray-50 text-left font-medium [&>*]:px-1"
                   >
-                    <td className="px-1">{item.vendor}</td>
-                    <td className="px-1">{item.name}</td>
-                    <td className="px-1">{item.manname}</td>
-                    <td className="px-1">{item.unit}</td>
-                    <td className="px-1">{item.price * item.count}</td>
-                    <td className="px-1">{item.amount}</td>
-                    <td className="px-1">
+                    <td>{item.vendor}</td>
+                    <td>{item.name}</td>
+                    <td>{item.manname}</td>
+                    <td>{item.unit}</td>
+                    <td>{item.price * item.count}</td>
+                    <td>{item.amount}</td>
+                    <td>
                       <div className="flex items-center">
                         <input
                           type="number"

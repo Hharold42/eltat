@@ -2,7 +2,7 @@
 
 import PopupForm from "@/components/Popup";
 import fetcher from "@/utils/fetcher";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 
 const SelectProject = ({ handler = () => {}, plus = true, def = -1 }) => {

@@ -73,7 +73,7 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
         onChange={(e) => {
           handler(e);
         }}
-        className="w-full px-2 py-2 border border-black border-solid rounded-sm"
+        className={`w-full px-2 py-2 border border-black border-solid rounded-sm`}
       >
         {[
           <option key={"zerocont"} value={-1}></option>,
