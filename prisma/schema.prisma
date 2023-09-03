@@ -50,6 +50,7 @@ model Order {
   userId       Int?        @default(0)
   contractor   contractor? @relation(fields: [contractorId], references: [id])
   User         User?       @relation(fields: [userId], references: [id])
+  files        Bytes[]
 }
 
 model contractor {

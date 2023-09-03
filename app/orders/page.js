@@ -50,25 +50,25 @@ export default function Orders() {
     <div>
       <SubHeader checkedOrders={checked} />
       <main className="flex flex-col my-2">
-        <div className="flex flex-row w-full justify-between mb-2 px-2">
+        <div className="flex flex-row justify-between mx-4">
           <SelectContactor
             handler={changeContactor}
             plus={false}
             def={contractor}
           />
           <SelectProject handler={changeProject} plus={false} def={project} />
-          <div className="w-full px-2 py-1 flex flex-row">
-            <span className="py-1 pr-2 text-black font-semibold">Название</span>
+          <div className="flex items-center mr-4">
+            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
+              Название
+            </span>
             <input
               type="text"
               value={term}
               onChange={(e) => setTerm(e.target.value)}
-              className="w-full px-2 py-2 border border-black border-solid rounded-sm"
+              className="w-[450px] border border-black border-solid rounded-sm px-2 py-1 focus:outline-none"
             />
-          </div>
-          <div className="flex flex-col justify-center px-2">
             <button
-              className=""
+              className="flex items-center justify-center border rounded-sm ml-[-2rem] bg-gradient-to-t from-[#fbfbfb] via-[#e0e0e0] to-[#fbfbfb]"
               onClick={() => {
                 setCurrentPage(1);
                 setSearch({
@@ -78,7 +78,7 @@ export default function Orders() {
                 });
               }}
             >
-              <FiSearch size={40} />
+              <FiSearch size={30} />
             </button>
           </div>
         </div>

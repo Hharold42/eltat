@@ -1,3 +1,5 @@
+import prisma from "@/prisma/client";
+
 const ExcelJS = require("exceljs");
 const { format } = require("date-fns");
 const { ru, tr } = require("date-fns/locale");
@@ -50,21 +52,6 @@ const addArrayToRow = (worksheet, n, dataArray) => {
   }
 };
 
-const deleteBordersFromCells = (worksheet, cellReferences) => {
-  // Loop through the cell references and remove their border styles
-  cellReferences.forEach((cellRef) => {
-    const cell = worksheet.getCell(cellRef);
-
-    // Clear all border styles
-    cell.border = {
-      top: { style: "none" },
-      left: { style: "none" },
-      bottom: { style: "none" },
-      right: { style: "none" },
-    };
-  });
-};
-
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const { contractor, order, nomenclature, project } = req.body;
@@ -78,8 +65,8 @@ export default async function handler(req, res) {
       const ws = workbook.getWorksheet("Sheet1");
       const { margin } = order;
 
-      ws.getCell("G14").value = `СЧЕТ № ${
-        order.id
+      ws.getCell("G14").value = `СЧЕТ № ${order.id}${
+        order.files.length
       } от ${formatCurrentDateRussian()}`;
       ws.getCell("C17").value = contractor;
       ws.getCell("C18").value = project;
@@ -143,30 +130,6 @@ export default async function handler(req, res) {
       ws.getColumn("F").width = 15;
       ws.getColumn("G").width = 25;
 
-      // ws.getCell("G25").value = `${Number(
-      //   order.cost * (1 + order.margin / 100)
-      // ).toLocaleString("en-EU")}`;
-      // ws.getCell("G26").value = `${((order.cost * 20) / 120).toLocaleString(
-      //   "en-EU"
-      // )}`;
-      // ws.getCell("G27").value = `${Number(
-      //   order.cost * (1 + order.margin / 100)
-      // ).toLocaleString("en-EU")}`;
-      // ws.getCell(
-      //   "C26"
-      // ).value = `Всего наименований ${nomenclature.length} на сумму: `;
-
-      // ws.eachRow({ includeEmpty: true }, (row, rowNumber) => {
-      //   // Iterate through each cell in the row
-      //   row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
-      //     // Preserve previous alignment settings and set wrapText to false
-      //     cell.alignment = {
-      //       ...cell.alignment,
-      //       wrapText: false,
-      //     };
-      //   });
-      // });
-
       nomenclature.forEach(async (item, index) => {
         const rowIndex = 21 + index;
         const { name, unit, count, price } = item;
@@ -175,6 +138,7 @@ export default async function handler(req, res) {
         addArrayToRow(ws, rowIndex, dataArr);
       });
       const buffer = await workbook.xlsx.writeBuffer();
+      const base64Data = buffer.toString("base64");
 
       // Set the response headers for Excel file download
       res.setHeader(
@@ -186,6 +150,15 @@ export default async function handler(req, res) {
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
       );
       res.setHeader("Content-Length", buffer.length);
+
+      const updateOrder = await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          files: {
+            push: base64Data,
+          },
+        },
+      });
 
       // Send the Excel file as the response
       return res.status(200).send(buffer);

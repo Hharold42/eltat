@@ -4,6 +4,8 @@ import axios from "axios";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { useState } from "react";
+import { BsFlagFill, BsCart3 } from "react-icons/bs";
+import { BiDollar } from "react-icons/bi";
 
 const getOrderFullData = async (id) => {
   const data = (await axios.get(`/api/getOrders?detail=${id}`)).data;
@@ -98,7 +100,7 @@ const SubHeader = ({ checkedOrders = [] }) => {
       <div className="flex space-x-4">
         <span className="text-white text-lg font-semibold px-3">Заказы</span>
         <button
-          className="bg-green-500 hover:bg-green-600 px-3 py-1 flex-1 rounded-sm"
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center"
           disabled={checkedOrders.length < 1}
           onClick={() => {
             checkedOrders.forEach(async (id) => {
@@ -123,10 +125,11 @@ const SubHeader = ({ checkedOrders = [] }) => {
             });
           }}
         >
+          <BsFlagFill size={15} className="mx-[2px]" />
           Счет
         </button>
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 flex-1 rounded-sm"
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center"
           disabled={checkedOrders.length < 1}
           onClick={() => {
             checkedOrders.forEach(async (id) => {
@@ -135,15 +138,17 @@ const SubHeader = ({ checkedOrders = [] }) => {
             });
           }}
         >
+          <BsCart3 size={15} className="mx-[2px]" />
           Спецификация
         </button>
         <button
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm"
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center"
           disabled={checkedOrders.length < 1}
           onClick={() => {
             setModalOpen(true);
           }}
         >
+          <BiDollar size={17} className="mx-[2px]" />
           Наценка
         </button>
       </div>

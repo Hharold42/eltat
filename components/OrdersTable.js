@@ -9,8 +9,8 @@ import {
   ArrowLeftCircle,
   ArrowRightCircle,
 } from "feather-icons-react/build/IconComponents";
-import { ImCheckmark } from "react-icons/im";
 import rounded from "@/utils/round";
+import { saveAs } from "file-saver";
 
 export default function OrdersTable({
   searchTerm,
@@ -31,6 +31,7 @@ export default function OrdersTable({
   }
 
   const rows = [...data.data];
+  console.log(rows);
   const totalPages = Math.ceil(data.totalItems / pageSize);
 
   return (
@@ -61,6 +62,7 @@ export default function OrdersTable({
             <th>Себестоимость</th>
             <th>Наценка</th>
             <th>Цена</th>
+            <th>Счета</th>
           </tr>
         </thead>
         <tbody>
@@ -69,9 +71,13 @@ export default function OrdersTable({
               Итого:
             </td>
             <td>
-              {rows.reduce((prev, curr) => {
-                return rounded((prev += curr.cost ? parseFloat(curr.cost) : 0));
-              }, 0).toLocaleString('en-EU')}
+              {rows
+                .reduce((prev, curr) => {
+                  return rounded(
+                    (prev += curr.cost ? parseFloat(curr.cost) : 0)
+                  );
+                }, 0)
+                .toLocaleString("en-EU")}
             </td>
             <td className="text-left px-2">
               {rows
@@ -132,6 +138,39 @@ export default function OrdersTable({
                         (1 + parseFloat(item.margin) / 100)
                     ).toLocaleString("en-EU")
                   : 0}
+              </td>
+              <td>
+                <div>
+                  {item.files.map((file, index) => {
+                    console.log(file);
+                    const downloadFile = () => {
+                      // Ensure that the order.files object has the expected structure
+                      if (file) {
+                        // Convert the data array to a Uint8Array
+                        const uint8Array = new Uint8Array(file.data);
+
+                        // Create a Blob from the Uint8Array
+                        const blob = new Blob([uint8Array], {
+                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        });
+
+                        // Use FileSaver.js to trigger the download
+                        saveAs(blob, `order_${item.id}${index}.xlsx`);
+                      } else {
+                        console.error("Invalid order.files object format");
+                        // Handle the error or provide a message to the user
+                      }
+                    };
+
+                    return (
+                      <button onClick={downloadFile} className="mr-1 text-xs">
+                        {item.id}
+                        {index}
+                        {index < item.files.length - 1 ? "," : ""}
+                      </button>
+                    );
+                  })}
+                </div>
               </td>
             </tr>
           ))}
