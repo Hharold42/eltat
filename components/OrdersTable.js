@@ -139,37 +139,39 @@ export default function OrdersTable({
                     ).toLocaleString("en-EU")
                   : 0}
               </td>
-              <td>
+              <td className="max-w-[100px]">
                 <div>
-                  {item.files.map((file, index) => {
-                    console.log(file);
-                    const downloadFile = () => {
-                      // Ensure that the order.files object has the expected structure
-                      if (file) {
-                        // Convert the data array to a Uint8Array
-                        const uint8Array = new Uint8Array(file.data);
+                  {item.files
+                    .map((file, index) => {
+                      console.log(file);
+                      const downloadFile = () => {
+                        // Ensure that the order.files object has the expected structure
+                        if (file) {
+                          // Convert the data array to a Uint8Array
+                          const uint8Array = new Uint8Array(file.data);
 
-                        // Create a Blob from the Uint8Array
-                        const blob = new Blob([uint8Array], {
-                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        });
+                          // Create a Blob from the Uint8Array
+                          const blob = new Blob([uint8Array], {
+                            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                          });
 
-                        // Use FileSaver.js to trigger the download
-                        saveAs(blob, `order_${item.id}${index}.xlsx`);
-                      } else {
-                        console.error("Invalid order.files object format");
-                        // Handle the error or provide a message to the user
-                      }
-                    };
+                          // Use FileSaver.js to trigger the download
+                          saveAs(blob, `order_${item.id}${index}.xlsx`);
+                        } else {
+                          console.error("Invalid order.files object format");
+                          // Handle the error or provide a message to the user
+                        }
+                      };
 
-                    return (
-                      <button onClick={downloadFile} className="mr-1 text-xs">
-                        {item.id}
-                        {index}
-                        {index < item.files.length - 1 ? "," : ""}
-                      </button>
-                    );
-                  })}
+                      return (
+                        <button onClick={downloadFile} className="mr-1 text-xs">
+                          {item.id}
+                          {index}
+                          {index > 0 ? "," : ""}
+                        </button>
+                      );
+                    })
+                    .reverse()}
                 </div>
               </td>
             </tr>

@@ -14,7 +14,25 @@ export default async function handler(req, res) {
         return res.status(404).json({ message: "Не найдено" });
       }
 
-      return res.status(200).json(data);
+      const projectName = await prisma.project.findUnique({
+        where: {
+          id: data.projectId_,
+        },
+      });
+
+      const contractorName = await prisma.contractor.findUnique({
+        where: {
+          id: data.contractorId,
+        },
+      });
+
+      return res
+        .status(200)
+        .json({
+          ...data,
+          contractorName: contractorName.name,
+          projectName: projectName.name,
+        });
     }
 
     const {

@@ -11,6 +11,8 @@ import checkForm from "@/utils/validators/checkOrderForm";
 import DetailNomenTable from "./DetailNomenTable";
 import ExcelExportButton from "./XLSXButton";
 import axios from "axios";
+import getOrderFullData from "@/utils/orderFullData";
+import exportXLSX from "@/utils/exportXLSX";
 
 const fulfillOreder = async (id) => {
   const body = {
@@ -197,7 +199,7 @@ const OrderDetailView = ({ data }) => {
               className="w-[700px] border border-black border-solid rounded-sm px-2 py-1"
             ></textarea>
           </div>
-          <div className="w-full flex flex-row">
+          <div className="w-full flex flex-row [&>*]:mx-2">
             <button
               onClick={(e) => {
                 const isValid = checkForm(formData);
@@ -226,42 +228,47 @@ const OrderDetailView = ({ data }) => {
                   data.id
                 );
               }}
-              className=" block w-full px-4 py-2 text-white  bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
+              className="block w-full px-4 py-2 text-white  bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
             >
               Обновить
             </button>
-            <ExcelExportButton
-              orderNomen={selectedNomen}
-              name={data.name}
-              id={data.id}
-            />
             <button
-              disabled={data.completed ? true : false}
-              onClick={() => {
-                const isValid = checkForm(formData);
-                if (isValid.code === -1) {
-                  setPopup({ text: isValid.message, type: "error" });
-                  handleClick();
-                  return;
-                }
-                if (selectedNomen.length < 1) {
-                  setPopup({ text: "Не выбрана номенклатура", type: "error" });
-                  handleClick();
-                  return;
-                }
-                if (selectedPerformers.length < 1) {
-                  setPopup({ text: "Не выбраны исполнители", type: "error" });
-                  handleClick();
-                  return;
-                }
-
-                setPopup({ text: "Успешно", type: "success" });
-                handleClick();
-                fulfillOreder(data.id);
+              className="block w-full px-4 py-2 text-white  bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
+              onClick={async () => {
+                const data_l = await getOrderFullData(data.id);
+                exportXLSX(
+                  data_l.data.name,
+                  data_l.data.id,
+                  data_l.parsedNomen
+                );
               }}
-              className="block text-center w-full px-4 py-2 text-white bg-yellow-500 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-indigo-200 disabled:bg-slate-900 disabled:cursor-not-allowed"
             >
-              Завершить
+              Скачать счет
+            </button>
+            <button
+              className="block w-full px-4 py-2 text-white  bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
+              onClick={async () => {
+                let data_l = await getOrderFullData(data.id);
+                data = { ...data, amount: 1 };
+
+                await axios
+                  .post(
+                    "/api/handleXlsx",
+                    { dataArr: [data_l] },
+                    { responseType: "blob" }
+                  )
+                  .then((res) => {
+                    const blob = new Blob([res.data], {
+                      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    });
+                    saveAs(
+                      blob,
+                      `Счет ${data_l.data.name}${data_l.data.files.length - 1}.xlsx`
+                    );
+                  });
+              }}
+            >
+              Скачать спецификацию
             </button>
           </div>
           <Snackbar
