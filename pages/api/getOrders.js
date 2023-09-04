@@ -27,13 +27,11 @@ export default async function handler(req, res) {
         },
       });
 
-      return res
-        .status(200)
-        .json({
-          ...data,
-          contractorName: contractorName.name,
-          projectName: projectName.name,
-        });
+      return res.status(200).json({
+        ...data,
+        contractorName: contractorName.name,
+        projectName: projectName.name,
+      });
     }
 
     const {
@@ -49,8 +47,9 @@ export default async function handler(req, res) {
     const skip = (parsedPage - 1) * parsedPageSize;
     const parsedProj = parseInt(searchProj);
     const parsedContr = parseInt(searchContr);
+
     let searchParams = [
-      { name: { contains: searchTerm, mode: "insensitive" } },
+      searchTerm.length > 0 ? { id: parseInt(searchTerm, 10) } : {},
     ];
 
     if (!!parsedProj && parsedProj > 0) {

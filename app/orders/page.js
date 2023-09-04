@@ -49,8 +49,8 @@ export default function Orders() {
   return (
     <div>
       <SubHeader checkedOrders={checked} />
-      <main className="flex flex-col my-2">
-        <div className="flex flex-row justify-between mx-4">
+      <main className="flex flex-col my-2 w-full">
+        <div className="flex flex-row justify-center mx-4 [&>*]:mx-2">
           <SelectContactor
             handler={changeContactor}
             plus={false}
@@ -59,13 +59,15 @@ export default function Orders() {
           <SelectProject handler={changeProject} plus={false} def={project} />
           <div className="flex items-center mr-4">
             <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
-              Название
+              Номер
             </span>
             <input
               type="text"
               value={term}
               onChange={(e) => setTerm(e.target.value)}
-              className="w-[450px] border border-black border-solid rounded-sm px-2 py-1 focus:outline-none"
+              placeholder=""
+              className="w-[150px]
+               border border-black border-solid rounded-sm px-2 py-1 focus:outline-none"
             />
             <button
               className="flex items-center justify-center border rounded-sm ml-[-2rem] bg-gradient-to-t from-[#fbfbfb] via-[#e0e0e0] to-[#fbfbfb]"

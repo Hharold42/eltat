@@ -177,20 +177,20 @@ function OrderCreate() {
                   <th>Производитель</th>
                   <th>Ед.</th>
                   <th>Цена</th>
-                  <th>Кол-во в упаковке</th>
+                  <th>Сумма</th>
                   <th>количество</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="text-right font-bold [&>*]:pr-4">
-                  <td colSpan={4}>Итого: </td>
+                  <td colSpan={5}>Итого: </td>
                   <td>
                     {selectedNomen.length > 0
                       ? rounded(
                           selectedNomen.reduce((prev, curr) => {
                             return prev + curr.price * curr.count;
                           }, 0)
-                        )
+                        ).toLocaleString("en-EU")
                       : 0}
                   </td>
                 </tr>
@@ -204,8 +204,10 @@ function OrderCreate() {
                     <td>{item.name}</td>
                     <td>{item.manname}</td>
                     <td>{item.unit}</td>
-                    <td>{item.price * item.count}</td>
-                    <td>{item.amount}</td>
+                    <td>{rounded(item.price).toLocaleString("en-EU")}</td>
+                    <td>
+                      {rounded(item.price * item.count).toLocaleString("en-EU")}
+                    </td>
                     <td>
                       <div className="flex items-center">
                         <input

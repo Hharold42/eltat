@@ -45,7 +45,7 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
   }
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center mr-4">
       <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
         Контрагент
       </span>
