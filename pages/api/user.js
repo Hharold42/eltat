@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
+    console.log("GET USER");
+
     try {
       const users = await prisma.user.findMany();
       res.status(200).json(users);
@@ -10,6 +12,8 @@ export default async function handler(req, res) {
       res.status(500).json({ error: "An error occured while fetching users" });
     }
   } else if (req.method === "POST") {
+    console.log("POST USER");
+
     const { name, role, email, password, last_name } = req.body;
     try {
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -29,5 +33,5 @@ export default async function handler(req, res) {
         .status(500)
         .json({ errror: "An error occurred while creating a user" });
     }
-  } 
+  }
 }

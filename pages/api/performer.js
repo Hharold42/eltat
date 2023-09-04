@@ -2,6 +2,8 @@ import prisma from "@/prisma/client";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
+    console.log("GET PERF");
+
     try {
       const performers = await prisma.performer.findMany();
       res.status(200).json(performers);
@@ -11,6 +13,8 @@ export default async function handler(req, res) {
         .json({ error: "An error occured while fetching performers" });
     }
   } else if (req.method === "POST") {
+    console.log("POST PERF");
+
     const { name, last_name, role } = req.body;
     try {
       const newPerformer = await prisma.performer.create({

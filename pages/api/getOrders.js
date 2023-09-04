@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 
 export default async function handler(req, res) {
   try {
+    console.log("POST GO");
     if (req.query.detail) {
       const { detail } = req.query;
 

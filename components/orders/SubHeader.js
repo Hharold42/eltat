@@ -8,6 +8,7 @@ import { BsFlagFill, BsCart3 } from "react-icons/bs";
 import { BiDollar } from "react-icons/bi";
 import getOrderFullData from "@/utils/orderFullData";
 import OrdersFromIds from "./server/OrdersFromIds";
+import { GrFormClose } from "react-icons/gr";
 
 const exportXLSX = async (name, id, orderNomen) => {
   const workbook = new ExcelJS.Workbook();
@@ -128,11 +129,13 @@ const SubHeader = ({ checkedOrders = [] }) => {
       <div className="flex space-x-4 text-slate-400">
         <button
           className="text-slate-400 px-3 py-1 hover:text-slate-200"
-          onClick={() => {
-            checkedOrders.forEach(async (id) => {
-              const data = await getOrderFullData(id);
-              await axios.get(`/api/cloneOrder?id=${data.data.id}`);
-            });
+          onClick={async () => {
+            await Promise.all(
+              checkedOrders.map(async (id) => {
+                const data = await getOrderFullData(id);
+                await axios.post(`/api/cloneOrder?id=${data.data.id}`);
+              })
+            );
 
             window.location.reload();
           }}
@@ -141,11 +144,13 @@ const SubHeader = ({ checkedOrders = [] }) => {
         </button>
         <button
           className="text-slate-400 px-3 py-1 hover:text-slate-200"
-          onClick={() => {
-            checkedOrders.forEach(async (id) => {
-              const data = await getOrderFullData(id);
-              await axios.delete(`/api/deleteOrder?id=${data.data.id}`);
-            });
+          onClick={async () => {
+            await Promise.all(
+              checkedOrders.map(async (id) => {
+                const data = await getOrderFullData(id);
+                await axios.delete(`/api/deleteOrder?id=${data.data.id}`);
+              })
+            );
             window.location.reload();
           }}
         >
@@ -161,12 +166,13 @@ const SubHeader = ({ checkedOrders = [] }) => {
                 setModalOpen(false);
               }}
             >
-              Close
+              <GrFormClose size={20} />
             </button>
             <h2 className="text-xl font-semibold mb-4">Добавить наценку</h2>
-            <div className="">
-              <span>Наценка</span>
+            <div className="my-4 w-full">
+              <span className="mr-2">Наценка</span>
               <input
+                className="border rounded-sm border-black px-2 w-full"
                 type="number"
                 value={addMargin}
                 onChange={(e) => {
@@ -175,6 +181,7 @@ const SubHeader = ({ checkedOrders = [] }) => {
               ></input>
             </div>
             <button
+              className="block w-full px-4 py-2 text-white  bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
               onClick={() => {
                 checkedOrders.forEach(async (id) => {
                   const data = await getOrderFullData(id);
@@ -191,6 +198,7 @@ const SubHeader = ({ checkedOrders = [] }) => {
               Применить
             </button>
           </div>
+          <div className="fixed w-full h-full bg-black opacity-40 -z-10"></div>
         </div>
       ) : (
         <></>
@@ -204,7 +212,7 @@ const SubHeader = ({ checkedOrders = [] }) => {
                 setCheckOpen(false);
               }}
             >
-              Close
+              <GrFormClose size={20} />
             </button>
             <h2 className="text-xl font-semibold mb-4">Выпустить счет</h2>
             <div className="flex flex-col justify-start items-start [&>*]:mb-2">

@@ -4,6 +4,7 @@ export default async function handler(req, res) {
   try {
     const contr = JSON.parse(req.body);
     if (req.method === "POST") {
+      console.log("POST CC")
       try {
         const data = await prisma.contractor.create({
           data: {

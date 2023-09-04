@@ -3,9 +3,10 @@ import prisma from "@/prisma/client";
 export default async function handler(req, res) {
   try {
     if (req.method === "POST") {
+      console.log("POST UO");
+
       if (req.query.mode === "om") {
         try {
-          console.log(req.body);
           const { margin, id, prevMargin } = req.body;
 
           const data = await prisma.order.update({

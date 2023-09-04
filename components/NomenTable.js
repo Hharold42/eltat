@@ -6,6 +6,7 @@ import {
   ArrowLeftCircle,
   ArrowRightCircle,
 } from "feather-icons-react/build/IconComponents";
+import PaginationButton from "./client/Pagination";
 
 const NomenTable = ({ handler }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,27 +48,16 @@ const NomenTable = ({ handler }) => {
     );
   }
 
+  const pages = Math.ceil(data?.totalPages / pageSize);
   return (
     <div className="z-0 bg-[#F8F8F1] h-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-2 py-2">
         <div>
-          <button
-            className="px-4 py-2 mx-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
-            onClick={() => {
-              setCurrentPage((prev) => prev - 1);
-            }}
-            disabled={currentPage === 1}
-          >
-            <ArrowLeftCircle />
-          </button>
-          <button
-            className="px-4 py-2 mx-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
-            onClick={() => {
-              setCurrentPage((prev) => prev + 1);
-            }}
-          >
-            <ArrowRightCircle />
-          </button>
+          <PaginationButton
+            curPage={currentPage}
+            totalPages={pages}
+            setCurrentPage={setCurrentPage}
+          />
         </div>
 
         <div className="flex flex-row">
@@ -111,7 +101,7 @@ const NomenTable = ({ handler }) => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((item) => (
+            {data.data.map((item) => (
               <tr
                 key={`${item.id}nomen`}
                 className="hover:bg-gray-50 text-left font-medium [&>*]:p-2"

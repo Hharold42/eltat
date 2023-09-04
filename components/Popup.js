@@ -42,7 +42,7 @@ const PopupForm = ({ name, path, updater = () => {}, children }) => {
 
       {isPopupVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-40">
-          <div className="bg-white p-6 rounded shadow-xl relative border border-slate-600">
+          <div className="bg-white p-6 rounded shadow-xl relative border border-slate-600 [&>form>*]:my-4 [&>form>*>span]:mx-2">
             <button
               onClick={togglePopup}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
@@ -50,7 +50,7 @@ const PopupForm = ({ name, path, updater = () => {}, children }) => {
               Close
             </button>
             <h2 className="text-xl font-semibold mb-4">{name}</h2>
-            <form>
+            <form className="">
               {children}
               <button
                 name="submit"
@@ -65,6 +65,7 @@ const PopupForm = ({ name, path, updater = () => {}, children }) => {
               </button>
             </form>
           </div>
+          <div className="fixed w-full h-full bg-black opacity-40 -z-10"></div>
         </div>
       )}
     </div>

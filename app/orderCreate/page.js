@@ -188,7 +188,6 @@ function OrderCreate() {
                     {selectedNomen.length > 0
                       ? rounded(
                           selectedNomen.reduce((prev, curr) => {
-                            console.log(curr);
                             return prev + curr.price * curr.count;
                           }, 0)
                         )

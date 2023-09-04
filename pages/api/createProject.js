@@ -4,6 +4,8 @@ export default async function handler(req, res) {
   try {
     const proj = JSON.parse(req.body);
     if (req.method === "POST") {
+      console.log("POST CRP");
+
       if (!proj.name.length) {
         return res
           .status(500)
@@ -16,7 +18,7 @@ export default async function handler(req, res) {
             comment: proj.comment,
           },
         });
-        return  res.status(200).json(data);
+        return res.status(200).json(data);
       } catch (err) {
         return res
           .status(500)

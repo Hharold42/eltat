@@ -29,8 +29,6 @@ const updateOrder = async (form, nomen, perfs, id) => {
     cost += item.price * item.count;
   });
 
-  console.log(cost);
-
   const body = {
     ...form,
     teamIds: perfs,
@@ -55,7 +53,6 @@ const updateOrder = async (form, nomen, perfs, id) => {
 };
 
 const OrderDetailView = ({ data }) => {
-  console.log(data);
   const [formData, setFormData] = useState({
     name: data.name,
     contractorId: data.contractorId,

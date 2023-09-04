@@ -75,13 +75,20 @@ const SelectProject = ({ handler = () => {}, plus = true, def = -1 }) => {
           path="createProject"
           updater={updateOnPost}
         >
-          <div className="">
-            <span className="">Имя</span>
-            <input type="text" name="name" className="" />
+          <div className="my-4 w-full">
+            <span className="mr-2">Имя</span>
+            <input
+              type="text"
+              name="name"
+              className="border rounded-sm border-black px-2 w-full"
+            />
           </div>
-          <div className="">
-            <span className="">Комментарий</span>
-            <textarea name="comment" className=""></textarea>
+          <div className="my-4 w-full">
+            <span className="mr-2">Комментарий</span>
+            <textarea
+              name="comment"
+              className="border rounded-sm border-black px-2 w-full"
+            ></textarea>
           </div>
         </PopupForm>
       ) : (

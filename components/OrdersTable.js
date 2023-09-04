@@ -11,6 +11,7 @@ import {
 } from "feather-icons-react/build/IconComponents";
 import rounded from "@/utils/round";
 import { saveAs } from "file-saver";
+import PaginationButton from "./client/Pagination";
 
 export default function OrdersTable({
   searchTerm,
@@ -31,18 +32,29 @@ export default function OrdersTable({
   }
 
   const rows = [...data.data];
-  console.log(rows);
   const totalPages = Math.ceil(data.totalItems / pageSize);
+  console.log(totalPages);
 
   return (
     <div className="font-bold px-1 text-sm">
+      <div className="">
+        <div className="flex justify-between">
+          
+        </div>
+        <PaginationButton
+          curPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
+
       <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
         <thead>
           <tr
             key={"zerotbl"}
             className="bg-[#000480] text-white text-left [&>*]:px-2 [&>*]:py-1"
           >
-            <th>
+            <th className="flex flex-col align-middle h-full border-none">
               <input
                 type="checkbox"
                 onChange={(e) => {
@@ -108,7 +120,7 @@ export default function OrdersTable({
               key={item.id + "order"}
               className="hover:bg-gray-50 text-left font-medium [&>*]:px-2"
             >
-              <td className="flex justify-center">
+              <td className=" align-middle text-center">
                 <input
                   type="checkbox"
                   checked={checked.includes(item.id)}
@@ -143,7 +155,6 @@ export default function OrdersTable({
                 <div>
                   {item.files
                     .map((file, index) => {
-                      console.log(file);
                       const downloadFile = () => {
                         // Ensure that the order.files object has the expected structure
                         if (file) {
@@ -179,33 +190,40 @@ export default function OrdersTable({
         </tbody>
       </table>
 
-      <div className="flex justify-between">
-        <button
-          className={`px-4 py-2 text-white ${
-            currentPage === totalPages
-              ? "bg-gray-400"
-              : "bg-indigo-500 hover:bg-indigo-600"
-          } rounded-sm  focus:outline-none focus:ring focus:ring-indigo-200 my-2`}
-          onClick={() => {
-            setCurrentPage((prev) => prev - 1);
-          }}
-          disabled={currentPage === 1}
-        >
-          <ArrowLeftCircle />
-        </button>
-        <button
-          className={`px-4 py-2 text-white ${
-            currentPage === totalPages
-              ? "bg-gray-400"
-              : "bg-indigo-500 hover:bg-indigo-600"
-          } rounded-sm  focus:outline-none focus:ring focus:ring-indigo-200 my-2`}
-          onClick={() => {
-            setCurrentPage((prev) => prev + 1);
-          }}
-          disabled={currentPage === totalPages}
-        >
-          <ArrowRightCircle />
-        </button>
+      <div className="">
+        <div className="flex justify-between">
+          <button
+            className={`px-4 py-2 text-white ${
+              currentPage === 1
+                ? "bg-gray-400"
+                : "bg-indigo-500 hover:bg-indigo-600"
+            } rounded-sm  focus:outline-none focus:ring focus:ring-indigo-200 my-2`}
+            onClick={() => {
+              setCurrentPage((prev) => prev - 1);
+            }}
+            disabled={currentPage === 1}
+          >
+            <ArrowLeftCircle />
+          </button>
+          <button
+            className={`px-4 py-2 text-white ${
+              currentPage === totalPages
+                ? "bg-gray-400"
+                : "bg-indigo-500 hover:bg-indigo-600"
+            } rounded-sm  focus:outline-none focus:ring focus:ring-indigo-200 my-2`}
+            onClick={() => {
+              setCurrentPage((prev) => prev + 1);
+            }}
+            disabled={currentPage === totalPages}
+          >
+            <ArrowRightCircle />
+          </button>
+        </div>
+        <PaginationButton
+          curPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
       </div>
     </div>
   );

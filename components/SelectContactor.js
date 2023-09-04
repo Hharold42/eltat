@@ -75,13 +75,20 @@ const SelectContactor = ({ handler = () => {}, plus = true, def = -1 }) => {
           path="createContractor"
           updater={updateOnPost}
         >
-          <div className="">
-            <span className="">Имя</span>
-            <input type="text" name="name" className="" />
+          <div className="mb-4 w-full">
+            <span className="mr-2">Имя</span>
+            <input
+              type="text"
+              name="name"
+              className="border rounded-sm border-black px-2 w-full"
+            />
           </div>
-          <div className="">
-            <span className="">Комментарий</span>
-            <textarea name="comment" className=""></textarea>
+          <div className="mb-4 w-full align-middle">
+            <span className="mr-2 align-middle">Комментарий</span>
+            <textarea
+              name="comment"
+              className="border rounded-sm border-black px-2 w-full"
+            ></textarea>
           </div>
         </PopupForm>
       ) : (

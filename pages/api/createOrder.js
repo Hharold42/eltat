@@ -5,6 +5,7 @@ export default async function handler(req, res) {
     const order = JSON.parse(req.body);
 
     if (req.method === "POST") {
+      console.log("POST CRO")
       try {
         const data = await prisma.order.create({
           data: {

@@ -2,8 +2,10 @@ import prisma from "@/prisma/client";
 
 export default async function handler(req, res) {
   try {
-    if (req.method === "GET") {
+    if (req.method === "POST") {
+      console.log("POST CLO");
       const id = parseInt(req.query.id);
+      console.log(id);
       const originalOrder = await prisma.order.findUnique({
         where: {
           id: id,

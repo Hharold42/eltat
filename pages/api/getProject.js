@@ -2,6 +2,7 @@ import prisma from "../../prisma/client";
 
 export default async function handler(req, res) {
   try {
+    console.log("GET GPR");
     if (req.query.id) {
       const { id } = req.query;
 

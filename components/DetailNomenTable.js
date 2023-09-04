@@ -44,7 +44,6 @@ const DetailNomenTable = ({ ids, state, handler }) => {
           {state.length > 0
             ? rounded(
                 state.reduce((prev, curr) => {
-                  console.log(curr);
                   return prev + curr.price * curr.count;
                 }, 0)
               )
