@@ -46,7 +46,7 @@ const DetailNomenTable = ({ ids, state, handler }) => {
                 state.reduce((prev, curr) => {
                   return prev + curr.price * curr.count;
                 }, 0)
-              )
+              ).toLocaleString("en-EU")
             : 0}
         </td>
       </tr>
@@ -86,7 +86,7 @@ const DetailNomenTable = ({ ids, state, handler }) => {
             </td>
           </tr>
         );
-      })}
+      }).reverse()}
     </tbody>
   );
 };

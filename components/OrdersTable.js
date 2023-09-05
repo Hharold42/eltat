@@ -12,6 +12,8 @@ import {
 import rounded from "@/utils/round";
 import { saveAs } from "file-saver";
 import PaginationButton from "./client/Pagination";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function OrdersTable({
   searchTerm,
@@ -20,27 +22,36 @@ export default function OrdersTable({
   checker,
   checked,
   setter,
+  isMutated,
+  mutator,
 }) {
   const pageSize = 100;
-  const { data, error, isLoading } = useSWR(
-    `api/getOrders?page=${currentPage}&pageSize=${pageSize}&searchTerm=${searchTerm.term}&searchProj=${searchTerm.project}&searchContr=${searchTerm.contractor}`,
-    fetcher
-  );
+  const [rows, setRows] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
 
-  if (isLoading) {
-    return <div>loading</div>;
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios
+        .get(
+          `/api/getOrders?page=${currentPage}&pageSize=${pageSize}&searchTerm=${searchTerm.term}&searchProj=${searchTerm.project}&searchContr=${searchTerm.contractor}`
+        )
+        .then((data) => {
+          setRows(data.data.data);
+          setTotalPages(Math.ceil(data.data.totalItems / pageSize));
+        });
+    };
 
-  const rows = [...data.data];
-  const totalPages = Math.ceil(data.totalItems / pageSize);
-  console.log(totalPages);
+    if (isMutated) {
+      fetchData();
+
+      mutator(false);
+    }
+  }, [isMutated]);
 
   return (
     <div className="font-bold px-1 text-sm">
       <div className="">
-        <div className="flex justify-between">
-          
-        </div>
+        <div className="flex justify-between"></div>
         <PaginationButton
           curPage={currentPage}
           totalPages={totalPages}

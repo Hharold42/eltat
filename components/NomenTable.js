@@ -2,10 +2,6 @@ import fetcher from "@/utils/fetcher";
 import { useState } from "react";
 import useSWR from "swr";
 import { AiOutlinePlus } from "react-icons/ai";
-import {
-  ArrowLeftCircle,
-  ArrowRightCircle,
-} from "feather-icons-react/build/IconComponents";
 import PaginationButton from "./client/Pagination";
 
 const NomenTable = ({ handler }) => {
@@ -90,7 +86,7 @@ const NomenTable = ({ handler }) => {
               className="[&>*]:p-2 bg-[#000480] text-white text-left sticky top-0"
             >
               <th>
-                <AiOutlinePlus size={30} />
+                
               </th>
               <th>Артикул</th>
               <th>Наименование</th>

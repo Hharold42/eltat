@@ -18,6 +18,7 @@ export default function Orders() {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [checked, setChecked] = useState([]);
+  const [isMuteted, setMutated] = useState(true);
 
   const changeChecked = (id, checked) => {
     if (checked === true) {
@@ -36,6 +37,19 @@ export default function Orders() {
     }
   };
 
+  const uncheck = (id) => {
+    setChecked((prev) => {
+      const index = prev.indexOf(id);
+      const tmp = [...prev];
+
+      if (index > -1) {
+        tmp.splice(index, 1);
+      }
+
+      return tmp;
+    });
+  };
+
   const changeProject = (e) => {
     const { value } = e.target;
     setProject(value);
@@ -48,7 +62,11 @@ export default function Orders() {
 
   return (
     <div>
-      <SubHeader checkedOrders={checked} />
+      <SubHeader
+        checkedOrders={checked}
+        mutator={setMutated}
+        checker={uncheck}
+      />
       <main className="flex flex-col my-2 w-full">
         <div className="flex flex-row justify-center mx-4 [&>*]:mx-2">
           <SelectContactor
@@ -92,6 +110,8 @@ export default function Orders() {
             checker={changeChecked}
             checked={checked}
             setter={setChecked}
+            isMutated={isMuteted}
+            mutator={setMutated}
           />
         </div>
       </main>

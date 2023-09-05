@@ -121,37 +121,10 @@ const OrderDetailView = ({ data }) => {
           </div>
           <SelectContactor handler={changeField} def={formData.contractorId} />
           <SelectProject handler={changeField} def={formData.projectId} />
-          <PerfMultiselect
-            state={selectedPerformers}
-            handler={setSelectedPerformers}
-          />
+
           <div className="flex items-center">
             <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
-              Дата оплаты
-            </span>
-            <input
-              type="date"
-              name="paydate"
-              value={formData.paydate}
-              onChange={(e) => changeField(e)}
-              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
-            />
-          </div>
-          <div className="flex items-center">
-            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
-              Дата отправки
-            </span>
-            <input
-              type="date"
-              name="shipdate"
-              value={formData.shipdate}
-              onChange={(e) => changeField(e)}
-              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
-            />
-          </div>
-          <div className="flex items-center">
-            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
-              Наценка
+              Наценка (%)
             </span>
             <input
               type="number"
@@ -161,7 +134,7 @@ const OrderDetailView = ({ data }) => {
               className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
             />
           </div>
-          <div className="font-bold text-sm px-1 overflow-y-scroll max-h-[50vh] border">
+          <div className="font-bold text-sm px-1 overflow-y-scroll max-h-[60vh] border">
             <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
               <thead className="sticky top-0 bg-white">
                 <tr
@@ -173,7 +146,7 @@ const OrderDetailView = ({ data }) => {
                   <th>Производитель</th>
                   <th>Ед.</th>
                   <th>Цена</th>
-                  <th>Кол-во в упаковке</th>
+                  <th>Сумма</th>
                   <th>количество</th>
                 </tr>
               </thead>
@@ -260,7 +233,9 @@ const OrderDetailView = ({ data }) => {
                     });
                     saveAs(
                       blob,
-                      `Счет ${data_l.data.name}${data_l.data.files.length - 1}.xlsx`
+                      `Счет ${data_l.data.name}${
+                        data_l.data.files.length - 1
+                      }.xlsx`
                     );
                   });
               }}

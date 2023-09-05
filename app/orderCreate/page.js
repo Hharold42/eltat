@@ -128,32 +128,6 @@ function OrderCreate() {
           </div>
           <SelectContactor handler={changeField} def={formData.contractorId} />
           <SelectProject handler={changeField} def={formData.projectId} />
-          <PerfMultiselect
-            state={selectedPerformers}
-            handler={setSelectedPerformers}
-          />
-          <div className="flex items-center">
-            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
-              Дата оплаты
-            </span>
-            <input
-              type="date"
-              name="paydate"
-              onChange={(e) => changeField(e)}
-              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
-            />
-          </div>
-          <div className="flex items-center">
-            <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
-              Дата отгрузки
-            </span>
-            <input
-              type="date"
-              name="shipdate"
-              onChange={(e) => changeField(e)}
-              className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
-            />
-          </div>
           <div className="flex items-center">
             <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Наценка
@@ -194,7 +168,7 @@ function OrderCreate() {
                       : 0}
                   </td>
                 </tr>
-                {selectedNomen.reverse().map((item, index) => (
+                {selectedNomen.map((item, index) => (
                   <tr
                     id={item.id}
                     key={`${item.id}nomen`}
@@ -221,7 +195,7 @@ function OrderCreate() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                )).reverse()}
               </tbody>
             </table>
           </div>

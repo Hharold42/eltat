@@ -9,6 +9,7 @@ import { BiDollar } from "react-icons/bi";
 import getOrderFullData from "@/utils/orderFullData";
 import OrdersFromIds from "./server/OrdersFromIds";
 import { GrFormClose } from "react-icons/gr";
+import { mutate } from "swr";
 
 const exportXLSX = async (name, id, orderNomen) => {
   const workbook = new ExcelJS.Workbook();
@@ -62,7 +63,7 @@ const exportXLSX = async (name, id, orderNomen) => {
   saveAs(blob, `Спецификация ${name}-${id}`);
 };
 
-const SubHeader = ({ checkedOrders = [] }) => {
+const SubHeader = ({ checkedOrders = [], mutator, checker }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isCheckOpen, setCheckOpen] = useState(false);
   const [addMargin, setAddMargin] = useState(0);
@@ -132,12 +133,13 @@ const SubHeader = ({ checkedOrders = [] }) => {
           onClick={async () => {
             await Promise.all(
               checkedOrders.map(async (id) => {
+                checker(id);
                 const data = await getOrderFullData(id);
                 await axios.post(`/api/cloneOrder?id=${data.data.id}`);
               })
             );
 
-            window.location.reload();
+            mutator(true);
           }}
         >
           Скопировать
@@ -147,11 +149,12 @@ const SubHeader = ({ checkedOrders = [] }) => {
           onClick={async () => {
             await Promise.all(
               checkedOrders.map(async (id) => {
+                checker(id);
                 const data = await getOrderFullData(id);
                 await axios.delete(`/api/deleteOrder?id=${data.data.id}`);
               })
             );
-            window.location.reload();
+            mutator(true);
           }}
         >
           Удалить
@@ -182,17 +185,21 @@ const SubHeader = ({ checkedOrders = [] }) => {
             </div>
             <button
               className="block w-full px-4 py-2 text-white  bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
-              onClick={() => {
-                checkedOrders.forEach(async (id) => {
-                  const data = await getOrderFullData(id);
-                  await axios.post("/api/updateOrder?mode=om", {
-                    margin: parseInt(addMargin, 10),
-                    id: data.data.id,
-                    prevMargin: parseInt(data.data.margin, 10),
-                  });
-                });
+              onClick={async () => {
+                await Promise.all(
+                  checkedOrders.map(async (id) => {
+                    checker(id);
+                    const data = await getOrderFullData(id);
+                    await axios.post("/api/updateOrder?mode=om", {
+                      margin: parseInt(addMargin, 10),
+                      id: data.data.id,
+                      prevMargin: parseInt(data.data.margin, 10),
+                    });
+                  })
+                );
 
-                window.location.reload();
+                mutator(true);
+                setModalOpen(false);
               }}
             >
               Применить
