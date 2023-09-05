@@ -269,6 +269,8 @@ const SubHeader = ({ checkedOrders = [], mutator, checker }) => {
 
                     await axios.post("/api/handleXlsx?mode=s", { dataArr });
                   });
+
+                  mutator(true);
                 }}
               >
                 Сохранить в базу
@@ -302,6 +304,7 @@ const SubHeader = ({ checkedOrders = [], mutator, checker }) => {
                         );
                       });
                   });
+                  mutator(true);
                 }}
               >
                 Скачать XLSX и сохранить в базу
