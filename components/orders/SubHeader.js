@@ -257,18 +257,16 @@ const SubHeader = ({ checkedOrders = [], mutator, checker }) => {
               <button
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center w-[300px] border-2 border-slate-900"
                 onClick={async () => {
-                  checkedOrders.map(async (id) => {
-                    const dataArr = await Promise.all(
-                      checkedOrders.map(async (id) => {
-                        let data = await getOrderFullData(id);
-                        data = { ...data, amount: amount[id] };
+                  const dataArr = await Promise.all(
+                    checkedOrders.map(async (id) => {
+                      let data = await getOrderFullData(id);
+                      data = { ...data, amount: amount[id] };
 
-                        return data;
-                      })
-                    );
+                      return data;
+                    })
+                  );
 
-                    await axios.post("/api/handleXlsx?mode=s", { dataArr });
-                  });
+                  await axios.post("/api/handleXlsx?mode=s", { dataArr });
 
                   mutator(true);
                 }}
@@ -278,32 +276,31 @@ const SubHeader = ({ checkedOrders = [], mutator, checker }) => {
               <button
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center w-[300px] border-2 border-slate-900"
                 onClick={async () => {
-                  checkedOrders.map(async (id) => {
-                    const dataArr = await Promise.all(
-                      checkedOrders.map(async (id) => {
-                        let data = await getOrderFullData(id);
-                        data = { ...data, amount: amount[id] };
+                  const dataArr = await Promise.all(
+                    checkedOrders.map(async (id) => {
+                      let data = await getOrderFullData(id);
+                      data = { ...data, amount: amount[id] };
 
-                        return data;
-                      })
-                    );
+                      return data;
+                    })
+                  );
 
-                    await axios
-                      .post(
-                        "/api/handleXlsx?mode=s",
-                        { dataArr },
-                        { responseType: "blob" }
-                      )
-                      .then((res) => {
-                        const blob = new Blob([res.data], {
-                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        });
-                        saveAs(
-                          blob,
-                          `Счет ${dataArr[0].projectName}-${dataArr[0].data.files.length}.xlsx`
-                        );
+                  await axios
+                    .post(
+                      "/api/handleXlsx?mode=s",
+                      { dataArr },
+                      { responseType: "blob" }
+                    )
+                    .then((res) => {
+                      const blob = new Blob([res.data], {
+                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                       });
-                  });
+                      saveAs(
+                        blob,
+                        `Счет ${dataArr[0].projectName}-${dataArr[0].data.files.length}.xlsx`
+                      );
+                    });
+
                   mutator(true);
                 }}
               >
