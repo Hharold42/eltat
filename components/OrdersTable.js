@@ -212,6 +212,7 @@ export default function OrdersTable({
             } rounded-sm  focus:outline-none focus:ring focus:ring-indigo-200 my-2`}
             onClick={() => {
               setCurrentPage((prev) => prev - 1);
+              mutator(true);
             }}
             disabled={currentPage === 1}
           >
@@ -225,6 +226,7 @@ export default function OrdersTable({
             } rounded-sm  focus:outline-none focus:ring focus:ring-indigo-200 my-2`}
             onClick={() => {
               setCurrentPage((prev) => prev + 1);
+              mutator(true);
             }}
             disabled={currentPage === totalPages}
           >
@@ -235,6 +237,7 @@ export default function OrdersTable({
           curPage={currentPage}
           totalPages={totalPages}
           setCurrentPage={setCurrentPage}
+          mutator={mutator}
         />
       </div>
     </div>
