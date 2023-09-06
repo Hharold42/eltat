@@ -6,7 +6,8 @@ import SelectContactor from "../../components/SelectContactor";
 import SelectProject from "../../components/SelectProject";
 import { FiSearch } from "react-icons/fi";
 import SubHeader from "@/components/orders/SubHeader";
-import { BiArrowFromTop, BiArrowToTop } from "react-icons/bi";
+import { BiArrowToTop } from "react-icons/bi";
+import { AiOutlineReload } from "react-icons/ai";
 
 export default function Orders() {
   const [contractor, setContactor] = useState(-1);
@@ -106,6 +107,17 @@ export default function Orders() {
             </span>
             <input
               type="text"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setCurrentPage(1);
+                  setSearch({
+                    contractor: contractor,
+                    project: project,
+                    term: term,
+                  });
+                  setMutated(true);
+                }
+              }}
               value={term}
               onChange={(e) => setTerm(e.target.value)}
               placeholder=""
@@ -126,6 +138,23 @@ export default function Orders() {
             >
               <FiSearch size={30} />
             </button>
+            <button
+              className="flex items-center justify-center border border-black mx-2 rounded-sm bg-gradient-to-t from-[#fbfbfb] via-[#e0e0e0] to-[#fbfbfb]"
+              onClick={() => {
+                setCurrentPage(1);
+                setContactor(-1);
+                setProject(-1);
+                setTerm("");
+                setSearch({
+                  contractor: -1,
+                  project: -1,
+                  term: "",
+                });
+                setMutated(true);
+              }}
+            >
+              <AiOutlineReload size={30} />
+            </button>
           </div>
         </div>
         <div className="bg-white p-2 border border-slate-500 m-1">
@@ -141,7 +170,10 @@ export default function Orders() {
           />
         </div>
       </main>
-      <button className="sticky bottom-5 mx-5 z-30 p-4 rounded-full bg-slate-500 opacity-70" onClick={goToTop}>
+      <button
+        className="sticky bottom-5 mx-5 z-30 p-4 rounded-full bg-slate-500 opacity-70"
+        onClick={goToTop}
+      >
         <BiArrowToTop />
       </button>
     </div>

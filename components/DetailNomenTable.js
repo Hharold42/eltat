@@ -61,8 +61,8 @@ const DetailNomenTable = ({ ids, state, handler }) => {
             <td>{item.name}</td>
             <td>{item.manname}</td>
             <td>{item.unit}</td>
-            <td>{item.price * item.count}</td>
-            <td>{item.amount}</td>
+            <td>{rounded(item.price).toLocaleString("en-EU")}</td>
+            <td>{rounded(item.price * item.count).toLocaleString("en-EU")}</td>
             <td>
               <div className="flex items-center">
                 <input
