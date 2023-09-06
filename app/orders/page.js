@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrdersTable from "../../components/OrdersTable";
 import SelectContactor from "../../components/SelectContactor";
 import SelectProject from "../../components/SelectProject";
 import { FiSearch } from "react-icons/fi";
 import SubHeader from "@/components/orders/SubHeader";
+import { BiArrowFromTop, BiArrowToTop } from "react-icons/bi";
 
 export default function Orders() {
   const [contractor, setContactor] = useState(-1);
@@ -19,6 +20,24 @@ export default function Orders() {
   const [currentPage, setCurrentPage] = useState(1);
   const [checked, setChecked] = useState([]);
   const [isMuteted, setMutated] = useState(true);
+  const [showTopBtn, setShowTopBtn] = useState(false);
+
+  const goToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 400) {
+        setShowTopBtn(true);
+      } else {
+        setShowTopBtn(false);
+      }
+    });
+  }, []);
 
   const changeChecked = (id, checked) => {
     if (checked === true) {
@@ -73,8 +92,14 @@ export default function Orders() {
             handler={changeContactor}
             plus={false}
             def={contractor}
+            full={true}
           />
-          <SelectProject handler={changeProject} plus={false} def={project} />
+          <SelectProject
+            handler={changeProject}
+            plus={false}
+            def={project}
+            full={true}
+          />
           <div className="flex items-center mr-4">
             <span className="text-black font-semibold pr-2 w-[120px] max-w-[120px]">
               Номер
@@ -84,11 +109,11 @@ export default function Orders() {
               value={term}
               onChange={(e) => setTerm(e.target.value)}
               placeholder=""
-              className="w-[150px]
+              className="w-full
                border border-black border-solid rounded-sm px-2 py-1 focus:outline-none"
             />
             <button
-              className="flex items-center justify-center border rounded-sm ml-[-2rem] bg-gradient-to-t from-[#fbfbfb] via-[#e0e0e0] to-[#fbfbfb]"
+              className="flex items-center justify-center border border-black mx-2 rounded-sm bg-gradient-to-t from-[#fbfbfb] via-[#e0e0e0] to-[#fbfbfb]"
               onClick={() => {
                 setCurrentPage(1);
                 setSearch({
@@ -96,6 +121,7 @@ export default function Orders() {
                   project: project,
                   term: term,
                 });
+                setMutated(true);
               }}
             >
               <FiSearch size={30} />
@@ -115,6 +141,9 @@ export default function Orders() {
           />
         </div>
       </main>
+      <button className="sticky bottom-5 mx-5 z-30 p-4 rounded-full bg-slate-500 opacity-70" onClick={goToTop}>
+        <BiArrowToTop />
+      </button>
     </div>
   );
 }

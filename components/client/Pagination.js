@@ -1,8 +1,11 @@
 import React from "react";
 
-function PaginationButton({ curPage, setCurrentPage, totalPages }) {
+function PaginationButton({ curPage, setCurrentPage, totalPages, mutator }) {
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
+    if (!!mutator) {
+      mutator(true);
+    }
   };
 
   const renderPageNumbers = () => {
@@ -71,7 +74,9 @@ function PaginationButton({ curPage, setCurrentPage, totalPages }) {
               ? "bg-indigo-500"
               : "bg-indigo-300 hover:bg-indigo-600"
           } rounded-sm focus:outline-none focus:ring focus:ring-indigo-200 mx-1`}
-          onClick={() => handlePageClick(totalPages)}
+          onClick={() => {
+            handlePageClick(totalPages);
+          }}
         >
           {totalPages}
         </button>

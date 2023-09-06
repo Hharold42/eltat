@@ -49,13 +49,14 @@ export default function OrdersTable({
   }, [isMutated]);
 
   return (
-    <div className="font-bold px-1 text-sm">
+    <div className="font-bold px-1 text-sm overflow-x-scroll">
       <div className="">
         <div className="flex justify-between"></div>
         <PaginationButton
           curPage={currentPage}
           totalPages={totalPages}
           setCurrentPage={setCurrentPage}
+          mutator={mutator}
         />
       </div>
 

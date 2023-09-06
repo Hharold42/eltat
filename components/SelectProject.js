@@ -5,7 +5,12 @@ import fetcher from "@/utils/fetcher";
 import { useState } from "react";
 import useSWR from "swr";
 
-const SelectProject = ({ handler = () => {}, plus = true, def = -1 }) => {
+const SelectProject = ({
+  handler = () => {},
+  plus = true,
+  def = -1,
+  full = false,
+}) => {
   const { data, error, isLoading } = useSWR(`/api/getProject`, fetcher);
   const [options, setOptions] = useState([]);
 
@@ -56,7 +61,9 @@ const SelectProject = ({ handler = () => {}, plus = true, def = -1 }) => {
         onChange={(e) => {
           handler(e);
         }}
-        className="w-[350px] border border-black border-solid rounded-sm px-2 py-1"
+        className={`${
+          full ? "w-full" : "w-[350px]"
+        } border border-black border-solid rounded-sm px-2 py-1`}
       >
         {[
           <option key={"zeroproj"}></option>,
