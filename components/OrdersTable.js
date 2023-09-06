@@ -25,7 +25,8 @@ export default function OrdersTable({
   isMutated,
   mutator,
 }) {
-  const pageSize = 100;
+  const [pageSize, setPageSize] = useState(100);
+
   const [rows, setRows] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -58,6 +59,22 @@ export default function OrdersTable({
           setCurrentPage={setCurrentPage}
           mutator={mutator}
         />
+      </div>
+
+      <div className="my-2 border-b border-indigo-600">
+        <span>Кол-во записей: </span>
+        <select
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(() => e.target.value);
+            mutator(true);
+          }}
+        >
+          <option value={100}>100</option>
+          <option value={50}>50</option>
+          <option value={30}>30</option>
+          <option value={10}>10</option>
+        </select>
       </div>
 
       <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
