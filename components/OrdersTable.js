@@ -78,10 +78,10 @@ export default function OrdersTable({
       </div>
 
       <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
-        <thead>
+        <thead className="">
           <tr
             key={"zerotbl"}
-            className="bg-[#000480] text-white text-left [&>*]:px-2 [&>*]:py-1"
+            className="bg-[#000480] text-white text-left [&>*]:px-2 [&>*]:py-1 "
           >
             <th className="flex flex-col align-middle h-full border-none">
               <input
@@ -166,6 +166,7 @@ export default function OrdersTable({
                 >
                   {item.name}
                 </Link>
+                <p className="text-xs text-gray-400">{item.comment}</p>
               </td>
               <td>{new Date(item.createdAt).toLocaleDateString("ru")}</td>
               <td>

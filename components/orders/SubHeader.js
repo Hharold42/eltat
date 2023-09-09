@@ -3,13 +3,16 @@
 import axios from "axios";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsFlagFill, BsCart3 } from "react-icons/bs";
 import { BiDollar } from "react-icons/bi";
+import { FaFileExcel, FaRegFileExcel } from "react-icons/fa";
 import getOrderFullData from "@/utils/orderFullData";
 import OrdersFromIds from "./server/OrdersFromIds";
 import { GrFormClose } from "react-icons/gr";
-import { mutate } from "swr";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
+import rounded from "@/utils/round";
 
 const exportXLSX = async (name, id, orderNomen) => {
   const workbook = new ExcelJS.Workbook();
@@ -67,7 +70,25 @@ const SubHeader = ({ checkedOrders = [], mutator, checker }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isCheckOpen, setCheckOpen] = useState(false);
   const [addMargin, setAddMargin] = useState(0);
+  const [checkedData, setCheckedData] = useState([]);
   const [amount, setAmout] = useState({});
+
+  useEffect(() => {
+    const getAllData = () => {
+      checkedOrders.map(async (id) => {
+        const data = await getOrderFullData(id).then((res) => {
+          setCheckedData((prev) => [...prev, res]);
+        });
+      });
+    };
+
+    setCheckedData([]);
+    getAllData();
+  }, [checkedOrders]);
+
+  useEffect(() => {
+    console.log(checkedData);
+  }, [checkedData]);
 
   return (
     <div className="bg-gray-600 h-12 px-6 flex items-center justify-between sticky top-0 z-20">
@@ -205,14 +226,147 @@ const SubHeader = ({ checkedOrders = [], mutator, checker }) => {
               Применить
             </button>
           </div>
-          <div className="fixed w-full h-full bg-black opacity-40 -z-10"></div>
+          <div
+            className="fixed w-full h-full bg-black opacity-40 -z-10"
+            onClick={() => {
+              setModalOpen(false);
+            }}
+          ></div>
         </div>
       ) : (
         <></>
       )}
       {isCheckOpen ? (
         <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-40 text-black">
-          <div className="bg-white p-6 rounded-sm shadow-xl relative border border-slate-600">
+          <div className="bg-white p-6 rounded-md shadow-xl relative border border-slate-600">
+            <div className="flex flex-row justify-between">
+              <div className="flex flex-col justify-start items-start [&>*]:mb-2">
+                <h2 className="text-xl font-semibold mb-4">Выпустить счет</h2>
+                <div className="text-gray-500  flex flex-col justify-start">
+                  <p>
+                    Номер счета №: {checkedData[0].data.id}
+                    {checkedData[0].data.files.length}
+                  </p>
+                  <p>Контрагент: {checkedData[0].contractorName}</p>
+                  <p>
+                    Создано:{" "}
+                    {format(new Date(), "dd MMMM yyyy", { locale: ru })}{" "}
+                    {String(new Date().getHours()).padStart("2", "0") +
+                      ":" +
+                      String(new Date().getMinutes()).padStart("2", "0")}
+                  </p>
+                  <p>
+                    Сумма:{" "}
+                    {rounded(
+                      checkedData.reduce(
+                        (prev, curr) =>
+                          prev + curr.data.cost * (1 + curr.data.margin / 100),
+                        0
+                      )
+                    ).toLocaleString("en-EU")}{" "}
+                    руб
+                  </p>
+                  <p>
+                    Наценка:{" "}
+                    {rounded(
+                      checkedData.reduce(
+                        (prev, curr) =>
+                          prev +
+                          (curr.data.cost * (1 + curr.data.margin / 100) -
+                            curr.data.cost),
+                        0
+                      )
+                    ).toLocaleString("en-EU")}{" "}
+                    руб
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col justify-start items-start [&>*]:mb-2">
+                <button
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center w-[300px] border-2 border-slate-900"
+                  onClick={async () => {
+                    const dataArr = await Promise.all(
+                      checkedOrders.map(async (id) => {
+                        let data = await getOrderFullData(id);
+                        data = { ...data, amount: amount[id] };
+
+                        return data;
+                      })
+                    );
+
+                    await axios
+                      .post(
+                        "/api/handleXlsx",
+                        { dataArr },
+                        { responseType: "blob" }
+                      )
+                      .then((res) => {
+                        const blob = new Blob([res.data], {
+                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        });
+                        saveAs(
+                          blob,
+                          `Счет ${dataArr[0].projectName}-${dataArr[0].data.files.length}`
+                        );
+                      });
+                  }}
+                >
+                  Скачать <FaFileExcel />
+                </button>
+                <button
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center w-[300px] border-2 border-slate-900"
+                  onClick={async () => {
+                    const dataArr = await Promise.all(
+                      checkedOrders.map(async (id) => {
+                        let data = await getOrderFullData(id);
+                        data = { ...data, amount: amount[id] };
+
+                        return data;
+                      })
+                    );
+
+                    await axios.post("/api/handleXlsx?mode=s", { dataArr });
+
+                    mutator(true);
+                  }}
+                >
+                  Сохранить в базу <FaRegFileExcel />
+                </button>
+                <button
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center w-[300px] border-2 border-slate-900"
+                  onClick={async () => {
+                    const dataArr = await Promise.all(
+                      checkedOrders.map(async (id) => {
+                        let data = await getOrderFullData(id);
+                        data = { ...data, amount: amount[id] };
+
+                        return data;
+                      })
+                    );
+
+                    await axios
+                      .post(
+                        "/api/handleXlsx?mode=s",
+                        { dataArr },
+                        { responseType: "blob" }
+                      )
+                      .then((res) => {
+                        const blob = new Blob([res.data], {
+                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        });
+                        saveAs(
+                          blob,
+                          `Счет ${dataArr[0].projectName}-${dataArr[0].data.files.length}.xlsx`
+                        );
+                      });
+
+                    mutator(true);
+                  }}
+                >
+                  Скачать и сохранить в базу <FaFileExcel /> <FaRegFileExcel />
+                </button>
+              </div>
+            </div>
             <button
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
               onClick={() => {
@@ -221,92 +375,7 @@ const SubHeader = ({ checkedOrders = [], mutator, checker }) => {
             >
               <GrFormClose size={20} />
             </button>
-            <h2 className="text-xl font-semibold mb-4">Выпустить счет</h2>
-            <div className="flex flex-col justify-start items-start [&>*]:mb-2">
-              <button
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center w-[300px] border-2 border-slate-900"
-                onClick={async () => {
-                  const dataArr = await Promise.all(
-                    checkedOrders.map(async (id) => {
-                      let data = await getOrderFullData(id);
-                      data = { ...data, amount: amount[id] };
 
-                      return data;
-                    })
-                  );
-
-                  await axios
-                    .post(
-                      "/api/handleXlsx",
-                      { dataArr },
-                      { responseType: "blob" }
-                    )
-                    .then((res) => {
-                      const blob = new Blob([res.data], {
-                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                      });
-                      saveAs(
-                        blob,
-                        `Счет ${dataArr[0].projectName}-${dataArr[0].data.files.length}`
-                      );
-                    });
-                }}
-              >
-                Скачать XLSX
-              </button>
-              <button
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center w-[300px] border-2 border-slate-900"
-                onClick={async () => {
-                  const dataArr = await Promise.all(
-                    checkedOrders.map(async (id) => {
-                      let data = await getOrderFullData(id);
-                      data = { ...data, amount: amount[id] };
-
-                      return data;
-                    })
-                  );
-
-                  await axios.post("/api/handleXlsx?mode=s", { dataArr });
-
-                  mutator(true);
-                }}
-              >
-                Сохранить в базу
-              </button>
-              <button
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 flex-1 rounded-sm flex flex-row items-center w-[300px] border-2 border-slate-900"
-                onClick={async () => {
-                  const dataArr = await Promise.all(
-                    checkedOrders.map(async (id) => {
-                      let data = await getOrderFullData(id);
-                      data = { ...data, amount: amount[id] };
-
-                      return data;
-                    })
-                  );
-
-                  await axios
-                    .post(
-                      "/api/handleXlsx?mode=s",
-                      { dataArr },
-                      { responseType: "blob" }
-                    )
-                    .then((res) => {
-                      const blob = new Blob([res.data], {
-                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                      });
-                      saveAs(
-                        blob,
-                        `Счет ${dataArr[0].projectName}-${dataArr[0].data.files.length}.xlsx`
-                      );
-                    });
-
-                  mutator(true);
-                }}
-              >
-                Скачать XLSX и сохранить в базу
-              </button>
-            </div>
             <div className="font-bold px-1 text-sm">
               <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
                 <thead>
@@ -332,7 +401,12 @@ const SubHeader = ({ checkedOrders = [], mutator, checker }) => {
               </table>
             </div>
           </div>
-          <div className="fixed w-full h-full bg-black opacity-40 -z-10"></div>
+          <div
+            className="fixed w-full h-full bg-black opacity-40 -z-10"
+            onClick={() => {
+              setCheckOpen(false);
+            }}
+          ></div>
         </div>
       ) : (
         <></>

@@ -14,21 +14,6 @@ const formatCurrentDateRussian = () => {
   return formattedDate;
 };
 
-const deleteRowBorder = (worksheet, startRow, endRow) => {
-  for (let rowNumber = startRow; rowNumber <= endRow; rowNumber++) {
-    for (let colNumber = 2; colNumber <= 7; colNumber++) {
-      // Columns B to G
-      const cell = worksheet.getCell(rowNumber, colNumber);
-      cell.border = {
-        top: { style: "none" }, // Remove top border
-        left: { style: "none" }, // Remove left border
-        bottom: { style: "none" }, // Remove bottom border
-        right: { style: "none" }, // Remove right border
-      };
-    }
-  }
-};
-
 const addArrayToRow = (worksheet, n, dataArray) => {
   const row = worksheet.getRow(n);
 
@@ -99,8 +84,10 @@ export default async function handler(req, res) {
       C33_moved.style = {};
       C33_moved.alignment = { wrapText: false };
 
-      ws.getColumn("F").width = 25;
-      ws.getColumn("G").width = 25;
+      ws.getColumn("F").width = 20;
+      ws.getColumn("G").width = 20;
+      ws.getColumn("E").width = 8;
+      ws.getColumn("C").width = 40;
 
       const C26_moved = ws.getCell(`C${26 + dataArr.length - 2}`);
       C26_moved.value = `Всего наименований ${dataArr.length} на сумму: `;
@@ -132,9 +119,13 @@ export default async function handler(req, res) {
         horizontal: "right",
       };
 
+      const unifiedWS = workbook.addWorksheet(`Спецификация`);
+
       dataArr.forEach((item, index) => {
-        const localWS = workbook.addWorksheet(`Спецификация для ${index}`);
-        localWS.name = `Спецификация_${item.data.name}-${item.data.id}`;
+        unifiedWS.addRow([
+          `Спецификация для контрагента ${dataArr[index].data.contractorName} по проекту ${dataArr[index].data.projectName}`,
+        ]);
+        unifiedWS.addRow([]);
 
         const columnWidths = [0, 0, 0, 0, 0];
 
@@ -146,9 +137,7 @@ export default async function handler(req, res) {
           "Количество",
         ];
 
-        localWS.addRow(["Спецификация для контрагента ПЭК по проекту КВЗ"]);
-        localWS.addRow([]);
-        localWS.addRow(headers);
+        unifiedWS.addRow(headers);
 
         headers.map((value, index) => {
           columnWidths[index] = Math.max(columnWidths[index], value.length);
@@ -165,12 +154,14 @@ export default async function handler(req, res) {
           rowData.map((value, index) => {
             columnWidths[index] = Math.max(columnWidths[index], value.length);
           });
-          localWS.addRow(rowData);
+          unifiedWS.addRow(rowData);
         });
 
         columnWidths.map((width, index) => {
-          localWS.getColumn(index + 1).width = width + 2;
+          unifiedWS.getColumn(index + 1).width = width + 2;
         });
+
+        unifiedWS.addRows([[], []]);
 
         const rowIndex = 21 + index;
         const data = item.data;
@@ -214,6 +205,7 @@ export default async function handler(req, res) {
 
       return res.status(200).send(buffer);
     } catch (err) {
+      console.log(err);
       return res
         .status(400)
         .json({ message: "error occured while creating xlsx" });

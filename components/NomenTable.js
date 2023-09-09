@@ -1,5 +1,7 @@
+"use client";
+
 import fetcher from "@/utils/fetcher";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { AiOutlinePlus } from "react-icons/ai";
 import PaginationButton from "./client/Pagination";
@@ -8,6 +10,9 @@ const NomenTable = ({ handler }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+
+  const tableRef = useRef(null);
+
   const pageSize = 100;
 
   const { data, error, isLoading } = useSWR(
@@ -60,6 +65,12 @@ const NomenTable = ({ handler }) => {
           <input
             type="text"
             value={search}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setCurrentPage(1);
+                setSearchTerm(search);
+              }
+            }}
             placeholder="Артикул, название, производитель"
             onChange={(e) => {
               e.preventDefault();
@@ -78,16 +89,17 @@ const NomenTable = ({ handler }) => {
           </button>
         </div>
       </div>
-      <div className="font-bold text-lg px-1 overflow-y-scroll max-h-[80vh] border">
+      <div
+        className="font-bold text-lg px-1 overflow-y-scroll max-h-[80vh] border"
+        ref={tableRef}
+      >
         <table className="min-w-full border-collapse border border-gray-300 [&>*>tr>*]:border text-sm">
           <thead>
             <tr
               key="zeronomen"
               className="[&>*]:p-2 bg-[#000480] text-white text-left sticky top-0"
             >
-              <th>
-                
-              </th>
+              <th></th>
               <th>Артикул</th>
               <th>Наименование</th>
               <th>Производитель</th>

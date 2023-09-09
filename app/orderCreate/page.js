@@ -18,6 +18,10 @@ const sendPost = async (form, nomen, perfs, uid) => {
     cost += item.price * item.count;
   });
 
+  if (form.margin <= 0 || form.margin === undefined || form.margin === null) {
+    form.margin = 0;
+  }
+
   const body = {
     ...form,
     teamIds: perfs,
@@ -46,14 +50,14 @@ function OrderCreate() {
   const [formData, setFormData] = useState({
     name: null,
     contractorId: -1,
-    paydate: null,
-    shipdate: null,
-    margin: null,
-    comment: null,
+    paydate: new Date(),
+    shipdate: new Date(),
+    margin: 0,
+    comment: "...",
     projectId: -1,
   });
   const [selectedNomen, setSelectedNomen] = useState([]);
-  const [selectedPerformers, setSelectedPerformers] = useState([]);
+  const [selectedPerformers, setSelectedPerformers] = useState([-100]);
   const [showPopup, setShowPopup] = useState(false);
   const [popup, setPopup] = useState({ text: "", type: "error" });
 
@@ -168,34 +172,38 @@ function OrderCreate() {
                       : 0}
                   </td>
                 </tr>
-                {selectedNomen.map((item, index) => (
-                  <tr
-                    id={item.id}
-                    key={`${item.id}nomen`}
-                    className="hover:bg-gray-50 text-left font-medium [&>*]:px-1"
-                  >
-                    <td>{item.vendor}</td>
-                    <td>{item.name}</td>
-                    <td>{item.manname}</td>
-                    <td>{item.unit}</td>
-                    <td>{rounded(item.price).toLocaleString("en-EU")}</td>
-                    <td>
-                      {rounded(item.price * item.count).toLocaleString("en-EU")}
-                    </td>
-                    <td>
-                      <div className="flex items-center">
-                        <input
-                          type="number"
-                          value={selectedNomen[index].count}
-                          className="mr-2 max-w-[4rem] text-center border-2 border-black rounded"
-                          onChange={(e) =>
-                            changeNomenCountByIndex(e.target.value, index)
-                          }
-                        ></input>
-                      </div>
-                    </td>
-                  </tr>
-                )).reverse()}
+                {selectedNomen
+                  .map((item, index) => (
+                    <tr
+                      id={item.id}
+                      key={`${item.id}nomen`}
+                      className="hover:bg-gray-50 text-left font-medium [&>*]:px-1"
+                    >
+                      <td>{item.vendor}</td>
+                      <td>{item.name}</td>
+                      <td>{item.manname}</td>
+                      <td>{item.unit}</td>
+                      <td>{rounded(item.price).toLocaleString("en-EU")}</td>
+                      <td>
+                        {rounded(item.price * item.count).toLocaleString(
+                          "en-EU"
+                        )}
+                      </td>
+                      <td>
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            value={selectedNomen[index].count}
+                            className="mr-2 max-w-[4rem] text-center border-2 border-black rounded"
+                            onChange={(e) =>
+                              changeNomenCountByIndex(e.target.value, index)
+                            }
+                          ></input>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                  .reverse()}
               </tbody>
             </table>
           </div>
@@ -223,12 +231,6 @@ function OrderCreate() {
                 handleClick();
                 return;
               }
-              if (selectedPerformers.length < 1) {
-                setPopup({ text: "Не выбраны исполнители", type: "error" });
-                handleClick();
-                return;
-              }
-
               setPopup({ text: "Успешно", type: "success" });
               handleClick();
               sendPost(

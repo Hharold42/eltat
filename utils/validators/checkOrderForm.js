@@ -4,7 +4,7 @@ export default function checkForm(formDataObj) {
   const keys = Object.keys(formDataObj);
 
   keys.forEach((item) => {
-    if (item !== "comment") {
+    if (item !== "comment" || item !== "margin") {
       if (formDataObj[item] === null) {
         res.code = -1;
         res.message = "Не все поля заполнены";

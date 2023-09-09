@@ -12,6 +12,17 @@ export default async function handler(req, res) {
         },
       });
 
+      let copyComm = "";
+
+      if (originalOrder.comment[0] === "[") {
+        const arr = originalOrder.comment.split(`~`);
+        const name = arr[0];
+        const number = Number(arr[1]);
+        copyComm = `${name}~${number + 1}`;
+      } else {
+        copyComm = `[Копия заказа ${originalOrder.id}]~1`;
+      }
+
       const clonedOrder = await prisma.order.create({
         data: {
           name: originalOrder.name,
@@ -21,7 +32,7 @@ export default async function handler(req, res) {
           shipdate: originalOrder.shipdate,
           margin: originalOrder.margin,
           nomenclature: originalOrder.nomenclature,
-          comment: originalOrder.comment,
+          comment: copyComm,
           createdAt: originalOrder.createdAt,
           projectId_: originalOrder.projectId_,
           cost: originalOrder.cost,

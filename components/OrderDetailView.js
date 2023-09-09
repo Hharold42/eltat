@@ -29,6 +29,10 @@ const updateOrder = async (form, nomen, perfs, id) => {
     cost += item.price * item.count;
   });
 
+  if (form.margin <= 0 || form.margin === undefined || form.margin === null) {
+    form.margin = 0;
+  }
+
   const body = {
     ...form,
     teamIds: perfs,
@@ -180,11 +184,6 @@ const OrderDetailView = ({ data }) => {
                 }
                 if (selectedNomen.length < 1) {
                   setPopup({ text: "Не выбрана номенклатура", type: "error" });
-                  handleClick();
-                  return;
-                }
-                if (selectedPerformers.length < 1) {
-                  setPopup({ text: "Не выбраны исполнители", type: "error" });
                   handleClick();
                   return;
                 }

@@ -6,7 +6,7 @@ import SelectContactor from "../../components/SelectContactor";
 import SelectProject from "../../components/SelectProject";
 import { FiSearch } from "react-icons/fi";
 import SubHeader from "@/components/orders/SubHeader";
-import { BiArrowToTop } from "react-icons/bi";
+import { FaArrowUp } from "react-icons/fa";
 import { AiOutlineReload } from "react-icons/ai";
 
 export default function Orders() {
@@ -174,7 +174,7 @@ export default function Orders() {
         className="sticky bottom-5 mx-5 z-30 p-4 rounded-full bg-slate-500 opacity-70"
         onClick={goToTop}
       >
-        <BiArrowToTop />
+        <FaArrowUp color="white" className="text-xl " />
       </button>
     </div>
   );
